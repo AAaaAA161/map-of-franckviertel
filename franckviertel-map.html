@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Franckviertel</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@200;400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: rgba(10, 10, 10, 0.88);
+      --border: rgba(255,255,255,0.1);
+      --accent-a: #c8f564;
+      --accent-b: #64b5f6;
+      --text: #e8e8e0;
+      --text-dim: rgba(232,232,224,0.45);
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      font-family: var(--sans);
+      color: var(--text);
+    }
+
+    #map {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #header {
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px 24px 20px;
+      background: linear-gradient(135deg, rgba(0,0,0,0.72) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    #header h1 {
+      font-family: var(--mono);
+      font-weight: 300;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text);
+      opacity: 0.8;
+      margin-bottom: 12px;
+    }
+
+    #header .coord {
+      position: fixed;
+      top: 18px; right: 24px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+
+    #controls {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      pointer-events: all;
+    }
+
+    /* Pill container per button row */
+    .btn-row {
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 2px;
+      padding: 6px 14px 6px 10px;
+    }
+
+    /* Indented sub-row gets left margin to signal hierarchy */
+    .btn-row.sub {
+      margin-left: 16px;
+      border-left: 2px solid rgba(255,255,255,0.15);
+    }
+
+    .layer-btn {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      transition: background 0.15s, opacity 0.15s;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .layer-btn:hover { opacity: 0.75; }
+    .layer-btn.off   { opacity: 0.35; }
+    .layer-btn.disabled { pointer-events: none; }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: opacity 0.15s;
+    }
+
+    .dot-a { background: var(--accent-a); box-shadow: 0 0 6px var(--accent-a); }
+    .dot-b { background: var(--accent-b); box-shadow: 0 0 6px var(--accent-b); }
+    .dot-c { background: #f5c842;         box-shadow: 0 0 5px #f5c842; }
+
+    .sep { display: none; }
+
+    .solo-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      margin-left: 8px;
+      padding: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      opacity: 0.3;
+      transition: opacity 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-row:hover .solo-btn { display: flex; }
+    .solo-btn:hover { opacity: 0.9; }
+    .solo-btn.active {
+      display: flex;
+      opacity: 1;
+      color: #fff;
+    }
+    /* When solo mode is active, dim non-active rows more */
+    #controls.solo-active .btn-row:not(.solo-active-row) {
+      opacity: 0.25;
+    }
+    #controls.solo-active .btn-row:not(.solo-active-row) .layer-btn {
+      pointer-events: none;
+    }
+    #controls.solo-active .btn-row.solo-active-row { opacity: 1; }
+
+    #view-toggle {
+      position: fixed;
+      bottom: 36px;
+      right: 60px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 38px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 0 14px;
+      border-radius: 2px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      cursor: pointer;
+      transition: opacity 0.15s;
+      user-select: none;
+    }
+    #view-toggle:hover { opacity: 0.75; }
+    #view-toggle svg { opacity: 0.7; flex-shrink: 0; }
+
+    #fullscreen-btn {
+      position: fixed;
+      bottom: 36px;
+      right: 24px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      color: var(--text);
+    }
+    #fullscreen-btn:hover { opacity: 0.75; }
+    #fullscreen-btn svg { opacity: 0.7; }
+
+    #status {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      transition: opacity 0.4s;
+    }
+
+    #status.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @keyframes popupFadeIn  { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes popupFadeOut { from { opacity: 1; } to { opacity: 0; } }
+    @keyframes popupSlideIn  { from { transform: translateY(6px); } to { transform: translateY(0); } }
+    @keyframes popupSlideOut { from { transform: translateY(0); } to { transform: translateY(6px); } }
+
+    /* opacity only on outer wrapper — does NOT interfere with MapLibre's transform positioning */
+    .maplibregl-popup { animation: popupFadeIn 0.22s ease-out forwards; }
+    .maplibregl-popup.is-closing { animation: popupFadeOut 0.18s ease-in forwards; pointer-events: none; }
+
+    /* slide on inner content only */
+    .maplibregl-popup-content { animation: popupSlideIn 0.22s ease-out forwards; }
+    .maplibregl-popup.is-closing .maplibregl-popup-content { animation: popupSlideOut 0.18s ease-in forwards; }
+
+    .maplibregl-popup-content {
+      background: rgba(255,255,255,0.92) !important;
+      border: none !important;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 3px !important;
+      padding: 0 !important;
+      font-family: var(--sans);
+      color: #1a1a1a;
+      font-size: 13px;
+      width: 520px;
+      max-width: 90vw;
+      max-height: 70vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.28) !important;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,0,0,0.2) transparent;
+    }
+
+    .maplibregl-popup-content::-webkit-scrollbar { width: 5px; }
+    .maplibregl-popup-content::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.18);
+      border-radius: 3px;
+    }
+
+    .popup-inner { padding: 16px 20px 18px; }
+
+    .maplibregl-popup-tip { display: none !important; }
+    .maplibregl-popup-close-button {
+      color: rgba(0,0,0,0.4) !important;
+      font-size: 18px !important;
+      right: 10px !important;
+      top: 8px !important;
+      background: none !important;
+      position: sticky !important;
+      float: right;
+      z-index: 2;
+    }
+
+    .popup-title {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #111111;
+      padding-right: 24px;
+    }
+
+    .popup-desc {
+      font-size: 12px;
+      color: #333333;
+      line-height: 1.6;
+    }
+
+    .popup-group {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    .popup-group.a { color: #5a8a00; }
+    .popup-group.b { color: #1565c0; }
+    .popup-group.c { color: #7a5a00; }
+
+    .maplibregl-ctrl-attrib { font-size: 9px !important; opacity: 0.5; }
+    .maplibregl-ctrl-logo   { display: none !important; }
+
+    .popup-link {
+      display: inline-block;
+      margin: 8px 0 4px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: #1565c0;
+      text-decoration: none;
+      opacity: 0.85;
+    }
+    .popup-link:hover { opacity: 1; text-decoration: underline; }
+
+    .popup-desc p            { margin: 0 0 6px; }
+    .popup-desc p:last-child { margin-bottom: 0; }
+    .popup-desc a            { color: #1565c0; text-decoration: none; }
+    .popup-desc a:hover      { text-decoration: underline; }
+    .popup-desc strong       { color: #111111; font-weight: 600; }
+    .popup-desc em           { font-style: italic; opacity: 0.8; }
+    .popup-desc ul, .popup-desc ol { padding-left: 16px; margin: 4px 0; }
+    .popup-desc li           { margin: 2px 0; }
+    .popup-desc h1, .popup-desc h2, .popup-desc h3 {
+      font-size: 12px; font-weight: 600; margin: 8px 0 4px; color: #111111;
+    }
+    .popup-desc code {
+      font-family: var(--mono); font-size: 10px;
+      background: rgba(0,0,0,0.07); padding: 1px 4px; border-radius: 2px;
+    }
+    .popup-desc hr { border: none; border-top: 1px solid rgba(0,0,0,0.12); margin: 8px 0; }
+  </style>
+</head>
+<body>
+
+<div id="status">Lade Kartendaten …</div>
+<div id="map"></div>
+
+<div id="header">
+  <h1>Franckviertel</h1>
+  <span class="coord" id="coord"></span>
+  <div id="controls">
+    <!-- generated by buildUI() after data loads -->
+  </div>
+</div>
+
+<button id="fullscreen-btn" onclick="toggleFullscreen()" title="Vollbild">
+  <svg id="fs-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+  </svg>
+</button>
+
+<button id="view-toggle" onclick="toggleView()">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+  </svg>
+  <span id="view-label">3D</span>
+</button>
+
+<script>
+  const DATA_URL = './franckviertel-full.json';
+  const CENTER   = [14.298, 48.304];
+  const ZOOM     = 14.5;
+  // Layer config: key, label, parent key (or null), match function against lowercased group title
+  // Display order: parent before children
+  const LAYERS = [
+    { key: 'relations',       label: 'Social Relations',       parent: null,           match: tl => tl === 'social relations' },
+    { key: 'institutions',    label: 'Institutions',           parent: 'relations',    match: tl => tl.includes('institutions') && !tl.includes('connections') },
+    { key: 'connections',     label: 'Connections',            parent: 'relations',    match: tl => tl.includes('connections') },
+    { key: 'housing',         label: 'Social Housing',         parent: null,           match: tl => tl === 'social housing' },
+    { key: 'housing_privat',  label: 'Privat',                 parent: 'housing',      match: tl => tl.startsWith('social housing') && (tl.includes('privat') || tl.includes('other')) },
+    { key: 'housing_gwg',     label: 'GWG',                    parent: 'housing',      match: tl => tl.startsWith('social housing') && tl.includes('gwg') },
+    { key: 'housing_brw',     label: 'BRW',                    parent: 'housing',      match: tl => tl.startsWith('social housing') && tl.includes('brw') },
+    { key: 'housing_nh',      label: 'Neue Heimat',            parent: 'housing',      match: tl => tl.startsWith('social housing') && tl.includes('neue heimat') },
+    { key: 'curtransform',    label: 'Current Transformation', parent: null,           match: tl => tl.includes('current transformation') },
+    { key: 'construction',    label: 'Construction sites',     parent: 'curtransform', match: tl => tl.includes('current transformation') && tl.includes('construction') },
+    { key: 'new2023',         label: 'New (since 2023)',       parent: 'curtransform', match: tl => tl.includes('current transformation') && tl.includes('new') },
+    { key: 'history',         label: 'History',                parent: null,           match: tl => tl.includes('history'), defaultOff: true, exclusive: true },
+  ];
+
+  // For matching, sort children before parents (more specific first)
+  const LAYERS_MATCH_ORDER = [...LAYERS].sort((a, b) => (b.parent ? 1 : 0) - (a.parent ? 1 : 0));
+
+  // History starts hidden; all others start visible
+  const state = Object.fromEntries(LAYERS.map(l => [l.key, !l.defaultOff]));
+
+  function resolveTitle(t) {
+    if (!t) return '';
+    if (typeof t === 'string') return t;
+    return t.de || t.en || Object.values(t)[0] || '';
+  }
+
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: {
+      version: 8,
+      sources: {
+        satellite: {
+          type: 'raster',
+          tiles: ['https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.jpg90?access_token=pk.eyJ1IjoiYWxleGFuZGVyaHViZXJub3dhayIsImEiOiJjbW1tZGk5YnEyMzdkMnBzb3liOXQ5dG83In0.qMAjQALy0oEyihUCFbtmeQ'],
+          tileSize: 512,
+          attribution: '© Mapbox © OpenStreetMap',
+          maxzoom: 22,
+        },
+        'mapbox-streets': {
+          type: 'vector',
+          tiles: ['https://api.mapbox.com/v4/mapbox.mapbox-streets-v8/{z}/{x}/{y}.mvt?access_token=pk.eyJ1IjoiYWxleGFuZGVyaHViZXJub3dhayIsImEiOiJjbW1tZGk5YnEyMzdkMnBzb3liOXQ5dG83In0.qMAjQALy0oEyihUCFbtmeQ'],
+          maxzoom: 16,
+        },
+      },
+      layers: [
+        { id: 'satellite', type: 'raster', source: 'satellite' },
+        {
+          id: 'buildings-3d',
+          type: 'fill-extrusion',
+          source: 'mapbox-streets',
+          'source-layer': 'building',
+          filter: ['==', 'extrude', 'true'],
+          layout: { visibility: 'none' },
+          paint: {
+            'fill-extrusion-color': [
+              'interpolate', ['linear'], ['get', 'height'],
+              0,   '#1a1a2e',
+              20,  '#16213e',
+              50,  '#0f3460',
+              100, '#533483',
+            ],
+            'fill-extrusion-height':       ['coalesce', ['get', 'height'], 10],
+            'fill-extrusion-base':         ['coalesce', ['get', 'min_height'], 0],
+            'fill-extrusion-opacity':      0.85,
+            'fill-extrusion-opacity-transition': { duration: 600, delay: 0 },
+          }
+        },
+      ]
+    },
+    center: CENTER,
+    zoom: ZOOM,
+    maxZoom: 20,
+  });
+
+  map.on('mousemove', (e) => {
+    document.getElementById('coord').textContent =
+      `${e.lngLat.lat.toFixed(5)}° N  ${e.lngLat.lng.toFixed(5)}° E`;
+  });
+
+  map.on('load', async () => {
+    try {
+      window._mapData = null; // will hold buckets+groupTitles for style swaps
+      const res = await fetch(DATA_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const full = await res.json();
+      const data = full.geojson || full;
+
+      const groupTitles = {};
+      if (data.groups) {
+        data.groups.forEach(g => { groupTitles[g.id] = resolveTitle(g.title); });
+      }
+
+      // Build groupBucket using LAYERS config (order matters: more specific first)
+      const groupBucket = {};
+      Object.entries(groupTitles).forEach(([gid, title]) => {
+        const tl = title.toLowerCase();
+        const matched = LAYERS_MATCH_ORDER.find(l => l.match(tl));
+        groupBucket[gid] = matched ? matched.key : 'other';
+      });
+
+      const buckets = Object.fromEntries([...LAYERS.map(l => [l.key, []]), ['other', []]]);
+      data.features.forEach(f => {
+        const gid = f.properties?.group;
+        const key = groupBucket[gid] ?? 'other';
+        if (buckets[key]) buckets[key].push(f);
+        else buckets['other'].push(f);
+      });
+
+
+      const pinPairs = new Set();
+      data.features.forEach(f => {
+        const sym = f.properties['marker-symbol'] || 'circle';
+        const col = (f.properties['marker-color'] || '#888888').toLowerCase();
+        pinPairs.add(`${sym}|||${col}`);
+      });
+
+      await Promise.all([...pinPairs].map(async pair => {
+        const [symbol, color] = pair.split('|||');
+        const imageName = `pin-${symbol}-${color.replace('#', '')}`;
+        if (map.hasImage(imageName)) return;
+        try {
+          const canvas  = await createPinCanvas(symbol, color, 28);
+          const ctx2    = canvas.getContext('2d');
+          const imgData = ctx2.getImageData(0, 0, canvas.width, canvas.height);
+          map.addImage(imageName, { width: canvas.width, height: canvas.height, data: imgData.data });
+        } catch(e) { console.warn('Pin image failed:', imageName, e); }
+      }));
+
+      function polygonArea(coords) {
+        let area = 0;
+        const ring = Array.isArray(coords[0][0]) ? coords[0] : coords;
+        for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+          area += (ring[j][0] + ring[i][0]) * (ring[j][1] - ring[i][1]);
+        }
+        return Math.abs(area / 2);
+      }
+
+      function featureArea(f) {
+        const gt = f.geometry?.type;
+        if (gt === 'Polygon')      return polygonArea(f.geometry.coordinates);
+        if (gt === 'MultiPolygon') return f.geometry.coordinates.reduce((s, p) => s + polygonArea(p), 0);
+        return 0;
+      }
+
+      Object.values(buckets).forEach(arr => arr.sort((a, b) => featureArea(b) - featureArea(a)));
+
+      // Render order: other first, then LAYERS in defined order (bottom to top).
+      // All polygon/line layers first, then all point layers on top.
+      const renderKeys = ['other', ...LAYERS.map(l => l.key)];
+
+      renderKeys.forEach(key => {
+        if (!buckets[key]?.length) return;
+        const src = `src-${key}`;
+        map.addSource(src, {
+          type: 'geojson',
+          data: { type: 'FeatureCollection', features: buckets[key] }
+        });
+        addPolygonLineLayers(key, src);
+      });
+
+      renderKeys.forEach(key => {
+        if (!buckets[key]?.length) return;
+        addPointLayer(key, `src-${key}`);
+      });
+
+      // Build UI buttons now that we know which buckets have data
+      buildUI(buckets, groupTitles);
+
+      // Store data globally for re-applying after style swaps
+      window._mapData = { buckets, groupTitles };
+
+      // Apply initial visibility states (e.g. History starts hidden)
+      LAYERS.filter(l => l.defaultOff).forEach(l => {
+        setLayerVisible(l.key, false);
+        const btn = document.getElementById(`btn-${l.key}`);
+        if (btn) btn.classList.add('off');
+      });
+
+      // Single click handler using queryRenderedFeatures so pins always win over polygons
+      const allLayerIds = [];
+      renderKeys.forEach(key => {
+        ['pt', 'ln', 'pl'].forEach(type => {
+          const lid = `${key}-${type}`;
+          if (map.getLayer(lid)) allLayerIds.push(lid);
+        });
+      });
+
+      // pt layers first so they have priority in the array
+      allLayerIds.sort((a, b) => {
+        const rank = id => id.endsWith('-pt') ? 0 : id.endsWith('-ln') ? 1 : 2;
+        return rank(a) - rank(b);
+      });
+
+      map.on('click', (e) => {
+        const existingIds = allLayerIds.filter(id => map.getLayer(id));
+        const features = existingIds.length ? map.queryRenderedFeatures(e.point, { layers: existingIds }) : [];
+        if (!features.length) return;
+
+        // Pick topmost feature — pt > ln > pl
+        const f     = features[0];
+        const layerId = f.layer.id;
+        const key   = layerId.replace(/-(?:pt|ln|pl)$/, '');
+        const props = f.properties;
+        const title  = props.title || '—';
+        const desc   = props.description ? marked.parse(props.description) : '';
+        const gname  = groupTitles[props.group] || '';
+        const cls    = key === 'housing' ? 'b' : key === 'connections' ? 'c' : 'a';
+        const extUrl = props.url || '';
+
+        let imgHtml = '';
+        try {
+          const img = typeof props.image === 'string' ? JSON.parse(props.image) : props.image;
+          if (img && img.id) {
+            const id  = img.id;
+            const src = `https://maphub.net/media/images/${id[0]}/${id.slice(1,3)}/${id}/544_400.jpg`;
+            imgHtml = `<img src="${src}" style="width:100%;display:block;border-radius:3px 3px 0 0;" loading="lazy" onerror="this.style.display='none'">`;
+          }
+        } catch(err) {}
+
+        if (window._activePopup) {
+          const el = window._activePopup.getElement();
+          if (el) el.classList.add('is-closing');
+          setTimeout(() => { if (window._activePopup) window._activePopup.remove(); }, 180);
+        }
+
+        const popup = new maplibregl.Popup({ closeButton: true, maxWidth: '520px' })
+          .setLngLat(e.lngLat)
+          .setHTML(`
+            ${imgHtml}
+            <div class="popup-inner">
+              <div class="popup-title">${title}</div>
+              ${desc   ? `<div class="popup-desc">${desc}</div>` : ''}
+              ${extUrl ? `<a class="popup-link" href="${extUrl}" target="_blank" rel="noopener">↗ Link</a>` : ''}
+              ${gname  ? `<div class="popup-group ${cls}">${gname}</div>` : ''}
+            </div>
+          `)
+          .addTo(map);
+
+        window._activePopup = popup;
+        popup.on('close', () => { window._activePopup = null; });
+
+        const closeBtn = popup.getElement()?.querySelector('.maplibregl-popup-close-button');
+        if (closeBtn) {
+          closeBtn.onclick = (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const el = popup.getElement();
+            if (el) el.classList.add('is-closing');
+            setTimeout(() => popup.remove(), 180);
+          };
+        }
+
+        setTimeout(() => {
+          const popEl = popup.getElement();
+          if (!popEl) return;
+          const ease    = t => t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+          const pad     = 16; // min px gap to viewport edge
+          const mapRect = map.getCanvas().getBoundingClientRect();
+          const popRect = popEl.getBoundingClientRect();
+
+          // Translate popup rect into canvas-local coordinates
+          const top    = popRect.top  - mapRect.top;
+          const bottom = popRect.bottom - mapRect.top;
+          const left   = popRect.left - mapRect.left;
+          const right  = popRect.right - mapRect.left;
+
+          // Compute how much we need to pan to bring popup fully into view
+          let dx = 0, dy = 0;
+          if (top    < pad)               dy = top    - pad;
+          if (bottom > mapRect.height - pad) dy = bottom - (mapRect.height - pad);
+          if (left   < pad)               dx = left   - pad;
+          if (right  > mapRect.width  - pad) dx = right  - (mapRect.width  - pad);
+
+          if (dx !== 0 || dy !== 0) {
+            map.panBy([dx, dy], { duration: 450, easing: ease });
+          }
+        }, 60);
+      });
+
+      // Cursor
+      map.on('mousemove', (e) => {
+        const existingIds = allLayerIds.filter(id => map.getLayer(id));
+        if (!existingIds.length) return;
+        const hit = map.queryRenderedFeatures(e.point, { layers: existingIds });
+        map.getCanvas().style.cursor = hit.length ? 'pointer' : '';
+      });
+
+      // Fit map to all features
+      const allFeatures = Object.values(buckets).flat();
+      if (allFeatures.length) {
+        let minLng = Infinity, maxLng = -Infinity, minLat = Infinity, maxLat = -Infinity;
+        function expandBounds(coord) {
+          if (Array.isArray(coord[0])) { coord.forEach(expandBounds); return; }
+          const [lng, lat] = coord;
+          if (lng < minLng) minLng = lng; if (lng > maxLng) maxLng = lng;
+          if (lat < minLat) minLat = lat; if (lat > maxLat) maxLat = lat;
+        }
+        allFeatures.forEach(f => {
+          if (f.geometry?.coordinates) expandBounds(f.geometry.coordinates);
+        });
+        map.fitBounds([[minLng, minLat], [maxLng, maxLat]], { padding: 60, duration: 0 });
+
+        // Limit panning to a generous buffer around the data extent
+        const padLng = 0.015; // ~1.2 km east/west
+        const padLat = 0.004; // ~450 m north/south
+        map.setMaxBounds([
+          [minLng - padLng, minLat - padLat],
+          [maxLng + padLng, maxLat + padLat]
+        ]);
+      }
+
+      document.getElementById('status').classList.add('hidden');
+
+    } catch (err) {
+      document.getElementById('status').textContent =
+        'Datei nicht gefunden. Bitte franckviertel-full.json im selben Ordner ablegen.';
+      console.error(err);
+    }
+  });
+
+  // ── Maki icons (embedded SVG paths, viewBox 0 0 15 15) ──────────────
+  const MAKI_ICONS = {
+    'information':   `<path d="M7.5,1 C6.7,1,6,1.7,6,2.5S6.7,4,7.5,4S9,3.3,9,2.5S8.3,1,7.5,1z M4,5v1c0,0,2,0,2,2v2c0,2-2,2-2,2v1h7v-1c0,0-2,0-2-2V6c0-0.5-0.5-1-1-1H4 z"/>`,
+    'house':         `<path d="M2,13.7478c0,0.13807,0.11193,0.25,0.25,0.25h3.749v-3h3v3h3.749c0.13807,0,0.25-0.11193,0.25-0.25V7.9987H2 C2,7.9987,2,13.7478,2,13.7478z M13.93,6.5778l-0.9319-0.8189V2c0-0.55228-0.44771-1-1-1s-1,0.44772-1,1v2L7.6808,1.09 C7.5863,0.9897,7.42846,0.98478,7.3279,1.079L7.3169,1.09L1.0678,6.553C0.9734,6.65376,0.97856,6.81197,1.07932,6.90637 C1.12478,6.94896,1.18451,6.97304,1.2468,6.9739L3,6.9989h10.7468c0.13807,0.00046,0.25037-0.1111,0.25083-0.24917 C13.99784,6.68592,13.97365,6.62445,13.93,6.5779V6.5778z"/>`,
+    'restaurant':    `<path d="M3.5,0l-1,5.5c-0.1464,0.805,1.7815,1.181,1.75,2L4,14c-0.0384,0.9993,1,1,1,1s1.0384-0.0007,1-1L5.75,7.5 c-0.0314-0.8176,1.7334-1.1808,1.75-2L6.5,0H6l0.25,4L5.5,4.5L5.25,0h-0.5L4.5,4.5L3.75,4L4,0H3.5z M12,0 c-0.7364,0-1.9642,0.6549-2.4551,1.6367C9.1358,2.3731,9,4.0182,9,5v2.5c0,0.8182,1.0909,1,1.5,1L10,14c-0.0905,0.9959,1,1,1,1 s1,0,1-1V0z"/>`,
+    'church':        `<path d="M6,0.9552V4H3v3h3v8h3V7h3V4H9V1 c0-1-0.9776-1-0.9776-1H6.9887C6.9887,0,6,0,6,0.9552z"/>`,
+    'theatre':       `<path d="M2,1c0,0-1,0-1,1v5.1582C1,8.8885,1.354,11,4.5,11H5V8L2.5,9c0,0,0-2.5,2.5-2.5V5 c0-0.7078,0.0868-1.3209,0.5-1.7754C5.8815,2.805,6.5046,1.9674,8.1562,2.7539L9,3.3027V2c0,0,0-1-1-1C7.2922,1,6.0224,2,5,2 S2.7865,1,2,1z M3,3c0.5523,0,1,0.4477,1,1S3.5523,5,3,5S2,4.5523,2,4S2.4477,3,3,3z M7,4c0,0-1,0-1,1v5c0,2,1,4,4,4s4-2,4-4V5 c0-1-1-1-1-1c-0.7078,0-1.9776,1-3,1S7.7865,4,7,4z M8,6c0.5523,0,1,0.4477,1,1S8.5523,8,8,8S7,7.5523,7,7S7.4477,6,8,6z M12,6 c0.5523,0,1,0.4477,1,1s-0.4477,1-1,1s-1-0.4477-1-1S11.4477,6,12,6z M7.5,10H10h2.5c0,0,0,2.5-2.5,2.5S7.5,10,7.5,10z"/>`,
+    'recycle':       `<path d="M2.4556,8.6134C2.118,9.2112,1.501,10.3021,2.593,11.0312c0.3432,0.2268,0.7275,0.3836,1.131,0.4614 C4.0314,11.5382,4.0466,12.0111,3.6855,12c-0.3849-0.0193-2.2596-0.1934-2.5606-1.5995c-0.1556-0.8213,0.0204-1.5571,0.504-2.3556 L2.3263,6.812L1.0196,6.0688L4.5,4v4L3.1941,7.3057L2.4556,8.6134z M6.7,2.034c1.155-0.628,1.823,0.43,2.191,1.007l0.8059,1.2631 L8.431,5.112L12,6.986L11.803,2.96l-1.2639,0.8066L9.779,2.578C9.2572,1.8321,8.875,1.2812,7.944,1.033 C6.307,0.7203,5.3007,2.6194,5.311,2.607c-0.1639,0.2871,0.2156,0.5399,0.451,0.21C6.0202,2.4969,6.339,2.2309,6.7,2.034z M13.294,8.221c-0.0877-0.1897-0.5487-0.1413-0.419,0.267c0.1312,0.3892,0.1845,0.8003,0.157,1.21C12.939,11.01,11.684,11,11,11H9.5 V9.5l-3.5,2l3.488,2.025L9.4926,12H11c0.8906,0.0153,1.5999-0.1759,2.2-0.713C14.4,10.226,13.294,8.221,13.294,8.221z"/>`,
+    'toilets':       `<path d="M3 1.5a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0ZM11.5 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM3.29 4a1 1 0 0 0-.868.504L.566 7.752a.5.5 0 1 0 .868.496l1.412-2.472A345.048 345.048 0 0 0 1 11h2v2.5a.5.5 0 0 0 1 0V11h1v2.5a.5.5 0 0 0 1 0V11h2L6.103 5.687l1.463 2.561a.5.5 0 1 0 .868-.496L6.578 4.504A1 1 0 0 0 5.71 4H3.29ZM9 4.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v4a.5.5 0 0 1-1 0v-4h-1v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1-1 0v-5Z"/>`,
+    'building_small':`<path d="M3,2v11h5v-3h3v3h1V2H3z M7,12H4v-2h3V12z M7,9H4V7h3V9z M7,6H4V4h3V6z M11,9H8V7h3V9z M11,6H8V4h3V6z"/>`,
+    'circle':        `<circle cx="7.5" cy="7.5" r="4"/>`,
+    'industry':      `<path d="M1,14V6l4-2v2l4-4v4l4-2v8H1z M3,9H2v2h1V9z M6,9H5v2h1V9z M9,9H8v2h1V9z M12,9h-1v2h1V9z M4,12H2v2h2V12z M9,12H6v2h3V12z M13,12h-2v2h2V12z"/>`
+  };
+  MAKI_ICONS['building-small'] = MAKI_ICONS['building_small'];
+
+  async function createPinCanvas(symbol, color, size) {
+    const S      = size * 2;
+    const canvas = document.createElement('canvas');
+    const pinH   = Math.round(S * 1.45);
+    canvas.width  = S;
+    canvas.height = pinH;
+    const ctx    = canvas.getContext('2d');
+    const cx     = S / 2;
+    const r      = S / 2 - 1;
+    const circleY = r + 1;
+
+    ctx.shadowColor   = 'rgba(0,0,0,0.38)';
+    ctx.shadowBlur    = S * 0.14;
+    ctx.shadowOffsetY = S * 0.07;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, pinH - 1);
+    ctx.bezierCurveTo(cx - r * 0.4, pinH * 0.58, cx - r, circleY + r * 0.5, cx - r, circleY);
+    ctx.arc(cx, circleY, r, Math.PI, 0);
+    ctx.bezierCurveTo(cx + r, circleY + r * 0.5, cx + r * 0.4, pinH * 0.58, cx, pinH - 1);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+
+    const makiKey   = symbol.replace(/-/g, '_');
+    const iconInner = MAKI_ICONS[makiKey] || MAKI_ICONS[symbol] || MAKI_ICONS['circle'];
+    if (iconInner) {
+      const pad   = r * 0.3;
+      const iSize = S - pad * 2;
+      const offX  = pad;
+      const offY  = circleY - r + (S - pad * 2 - iSize) / 2 + pad * 0.5;
+      const svg   = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15" width="${iSize}" height="${iSize}"><g fill="white">${iconInner}</g></svg>`;
+      const b64   = btoa(unescape(encodeURIComponent(svg)));
+      const uri   = `data:image/svg+xml;base64,${b64}`;
+      await new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => { ctx.drawImage(img, offX, offY, iSize, iSize); resolve(); };
+        img.onerror = resolve;
+        img.src = uri;
+      });
+    }
+    return canvas;
+  }
+
+  function opacityExpr(prop, fallback) {
+    return ['case', ['has', prop], ['to-number', ['get', prop]], fallback];
+  }
+
+  function addPolygonLineLayers(key, src) {
+    map.addLayer({
+      id: `${key}-pl`, type: 'fill', source: src,
+      filter: ['any', ['==', ['geometry-type'], 'Polygon'], ['==', ['geometry-type'], 'MultiPolygon']],
+      paint: {
+        'fill-color':              ['coalesce', ['get', 'fill'], ['get', 'marker-color'], '#888888'],
+        'fill-opacity':            opacityExpr('fill-opacity', 0.5),
+        'fill-opacity-transition': { duration: 350, delay: 0 },
+      }
+    });
+
+    map.addLayer({
+      id: `${key}-ln`, type: 'line', source: src,
+      filter: ['any',
+        ['==', ['geometry-type'], 'LineString'], ['==', ['geometry-type'], 'MultiLineString'],
+        ['==', ['geometry-type'], 'Polygon'],    ['==', ['geometry-type'], 'MultiPolygon'],
+      ],
+      paint: {
+        'line-color':              ['coalesce', ['get', 'stroke'], ['get', 'fill'], ['get', 'marker-color'], '#888888'],
+        'line-width':              ['case', ['has', 'stroke-width'], ['to-number', ['get', 'stroke-width']], 2],
+        'line-opacity':            opacityExpr('stroke-opacity', 0.9),
+        'line-opacity-transition': { duration: 350, delay: 0 },
+      }
+    });
+  }
+
+  function addPointLayer(key, src) {
+    map.addLayer({
+      id: `${key}-pt`, type: 'symbol', source: src,
+      filter: ['==', ['geometry-type'], 'Point'],
+      layout: {
+        'icon-image': ['concat', 'pin-',
+          ['coalesce', ['get', 'marker-symbol'], 'circle'], '-',
+          ['slice', ['coalesce', ['get', 'marker-color'], '#888888'], 1]
+        ],
+        'icon-size': 0.5,
+        'icon-allow-overlap': true,
+        'icon-anchor': 'bottom',
+      },
+      paint: {
+        'icon-opacity':            0.95,
+        'icon-opacity-transition': { duration: 350, delay: 0 },
+      }
+    });
+  }
+
+
+  // ── layer toggle with fade ───────────────────────────────────────────
+  const layerOrigOpacity = {};
+
+  function storeOrigOpacity(key) {
+    if (layerOrigOpacity[key]) return;
+    layerOrigOpacity[key] = {
+      [`${key}-pl`]: { prop: 'fill-opacity', val: opacityExpr('fill-opacity', 0.5) },
+      [`${key}-ln`]: { prop: 'line-opacity', val: opacityExpr('stroke-opacity', 0.9) },
+      [`${key}-pt`]: { prop: 'icon-opacity', val: 0.95 },
+    };
+  }
+
+  function setLayerVisible(key, visible) {
+    storeOrigOpacity(key);
+    if (visible) {
+      ['pt', 'ln', 'pl'].forEach(type => {
+        const lid = `${key}-${type}`;
+        if (!map.getLayer(lid)) return;
+        const { prop, val } = layerOrigOpacity[key][lid];
+        map.setLayoutProperty(lid, 'visibility', 'visible');
+        map.setPaintProperty(lid, prop, 0);
+        requestAnimationFrame(() => map.setPaintProperty(lid, prop, val));
+      });
+    } else {
+      ['pt', 'ln', 'pl'].forEach(type => {
+        const lid = `${key}-${type}`;
+        if (!map.getLayer(lid)) return;
+        map.setPaintProperty(lid, layerOrigOpacity[key][lid].prop, 0);
+      });
+      setTimeout(() => {
+        ['pt', 'ln', 'pl'].forEach(type => {
+          const lid = `${key}-${type}`;
+          if (map.getLayer(lid)) map.setLayoutProperty(lid, 'visibility', 'none');
+        });
+      }, 380);
+    }
+  }
+
+  function setLayerAndChildren(key, visible, changeState = true) {
+    if (changeState) state[key] = visible;
+    setLayerVisible(key, visible);
+    const btn = document.getElementById(`btn-${key}`);
+    if (btn) {
+      btn.classList.toggle('off', !visible);
+      if (!visible && !changeState) btn.classList.add('disabled');
+      else btn.classList.remove('disabled');
+    }
+    // Propagate to children
+    LAYERS.filter(l => l.parent === key).forEach(child => {
+      const show = visible ? state[child.key] : false;
+      setLayerVisible(child.key, show);
+      const cb = document.getElementById(`btn-${child.key}`);
+      if (cb) {
+        cb.classList.toggle('off', !show);
+        if (!visible) cb.classList.add('disabled');
+        else cb.classList.remove('disabled');
+      }
+    });
+  }
+
+  function toggleLayer(key) {
+    const layer   = LAYERS.find(l => l.key === key);
+    const turning = !state[key]; // what we're switching TO
+
+    if (layer?.exclusive) {
+      // Exclusive layer (History): turning on hides all non-exclusive layers
+      if (turning) {
+        LAYERS.filter(l => !l.exclusive && !l.parent).forEach(l => {
+          setLayerAndChildren(l.key, false, false); // force-hide without changing their state
+        });
+      } else {
+        // Turning off: restore all non-exclusive layers to their own state
+        LAYERS.filter(l => !l.exclusive && !l.parent).forEach(l => {
+          setLayerAndChildren(l.key, state[l.key]);
+        });
+      }
+    } else {
+      // Normal layer: if History is on, turn it off
+      if (state['history'] && turning) {
+        setLayerAndChildren('history', false, true);
+      }
+    }
+
+    setLayerAndChildren(key, turning);
+  }
+
+  // ── Build UI ─────────────────────────────────────────────────────────
+  let soloKey = null; // currently soloed parent key
+
+  function buildUI(buckets, groupTitles) {
+    const controls = document.getElementById('controls');
+    controls.innerHTML = '';
+
+    // A layer should show in UI if it OR any of its children have features
+    function hasAnyFeatures(key) {
+      if (buckets[key]?.length) return true;
+      return LAYERS.some(l => l.parent === key && buckets[l.key]?.length);
+    }
+
+    LAYERS.forEach(layer => {
+      if (!hasAnyFeatures(layer.key)) return;
+
+      const row = document.createElement('div');
+      row.className = 'btn-row' + (layer.parent ? ' sub' : '');
+      row.id = `row-${layer.key}`;
+
+      // Pick color from own features, or first child's features
+      let colorSource = buckets[layer.key]?.[0];
+      if (!colorSource) {
+        const child = LAYERS.find(l => l.parent === layer.key && buckets[l.key]?.length);
+        colorSource = child ? buckets[child.key][0] : null;
+      }
+      const p     = colorSource?.properties || {};
+      const color = p['marker-color'] || p['fill'] || p['stroke'] || '#888888';
+
+      const btn = document.createElement('button');
+      btn.className = 'layer-btn';
+      btn.id = `btn-${layer.key}`;
+      btn.onclick = () => toggleLayer(layer.key);
+      btn.innerHTML = `<span class="dot" style="background:${color};box-shadow:0 0 6px ${color}"></span>${layer.label}`;
+      row.appendChild(btn);
+
+      // Solo button only for top-level parents (not children, not exclusive)
+      if (!layer.parent && !layer.exclusive) {
+        const solo = document.createElement('button');
+        solo.className = 'solo-btn';
+        solo.id = `solo-${layer.key}`;
+        solo.title = 'Focus on this layer';
+        // Radio button SVG: outer circle + inner filled circle
+        solo.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/>
+        </svg>`;
+        solo.onclick = (e) => { e.stopPropagation(); toggleSolo(layer.key); };
+        row.appendChild(solo);
+      }
+
+      controls.appendChild(row);
+    });
+  }
+
+  function toggleSolo(key) {
+    const controls = document.getElementById('controls');
+    if (soloKey === key) {
+      // Exit solo mode — restore all layers to their state
+      soloKey = null;
+      controls.classList.remove('solo-active');
+      document.querySelectorAll('.btn-row').forEach(r => r.classList.remove('solo-active-row'));
+      document.querySelectorAll('.solo-btn').forEach(b => b.classList.remove('active'));
+      // Restore visibility for all non-exclusive top-level parents + children
+      LAYERS.filter(l => !l.exclusive).forEach(l => {
+        setLayerVisible(l.key, state[l.key]);
+        const btn = document.getElementById(`btn-${l.key}`);
+        if (btn) { btn.classList.toggle('off', !state[l.key]); btn.classList.remove('disabled'); }
+      });
+    } else {
+      // Enter solo mode for this key
+      soloKey = key;
+      controls.classList.add('solo-active');
+
+      LAYERS.filter(l => !l.exclusive).forEach(l => {
+        const isTarget   = l.key === key;
+        const isChild    = l.parent === key;
+        const show       = isTarget || isChild;
+
+        setLayerVisible(l.key, show ? state[l.key] : false);
+        const btn = document.getElementById(`btn-${l.key}`);
+        if (btn) {
+          btn.classList.toggle('off', show ? !state[l.key] : true);
+          btn.classList.toggle('disabled', !show);
+        }
+        const row = document.getElementById(`row-${l.key}`);
+        if (row) row.classList.toggle('solo-active-row', show);
+      });
+
+      // Update solo button states
+      document.querySelectorAll('.solo-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`solo-${key}`);
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+  }
+
+  // ── 2D / 3D view toggle ─────────────────────────────────────────────
+  let is3D = false;
+  const SAT_STYLE  = {
+      version: 8,
+      sources: {
+        satellite: {
+          type: 'raster',
+          tiles: ['https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.jpg90?access_token=pk.eyJ1IjoiYWxleGFuZGVyaHViZXJub3dhayIsImEiOiJjbW1tZGk5YnEyMzdkMnBzb3liOXQ5dG83In0.qMAjQALy0oEyihUCFbtmeQ'],
+          tileSize: 512,
+          attribution: '© Mapbox © OpenStreetMap',
+          maxzoom: 22,
+        },
+        'mapbox-streets': {
+          type: 'vector',
+          tiles: ['https://api.mapbox.com/v4/mapbox.mapbox-streets-v8/{z}/{x}/{y}.mvt?access_token=pk.eyJ1IjoiYWxleGFuZGVyaHViZXJub3dhayIsImEiOiJjbW1tZGk5YnEyMzdkMnBzb3liOXQ5dG83In0.qMAjQALy0oEyihUCFbtmeQ'],
+          maxzoom: 16,
+        },
+      },
+      layers: [
+        { id: 'satellite', type: 'raster', source: 'satellite' },
+        {
+          id: 'buildings-3d',
+          type: 'fill-extrusion',
+          source: 'mapbox-streets',
+          'source-layer': 'building',
+          filter: ['==', 'extrude', 'true'],
+          layout: { visibility: 'none' },
+          paint: {
+            'fill-extrusion-color': [
+              'interpolate', ['linear'], ['get', 'height'],
+              0,   '#1a1a2e',
+              20,  '#16213e',
+              50,  '#0f3460',
+              100, '#533483',
+            ],
+            'fill-extrusion-height':       ['coalesce', ['get', 'height'], 10],
+            'fill-extrusion-base':         ['coalesce', ['get', 'min_height'], 0],
+            'fill-extrusion-opacity':      0.85,
+            'fill-extrusion-opacity-transition': { duration: 600, delay: 0 },
+          }
+        },
+      ]
+    };
+  const VEC_STYLE  = 'https://tiles.openfreemap.org/styles/liberty';
+
+  async function applyDataLayers() {
+    if (!window._mapData) return;
+    const { buckets } = window._mapData;
+    const renderKeys = ['other', ...LAYERS.map(l => l.key)];
+
+    // Always force-add pin images after a style swap — hasImage may be stale
+    const pinPairs = new Set();
+    Object.values(buckets).flat().forEach(f => {
+      const sym = f.properties['marker-symbol'] || 'circle';
+      const col = (f.properties['marker-color'] || '#888888').toLowerCase();
+      pinPairs.add(`${sym}|||${col}`);
+    });
+    await Promise.all([...pinPairs].map(async pair => {
+      const [symbol, color] = pair.split('|||');
+      const imageName = `pin-${symbol}-${color.replace('#', '')}`;
+      try {
+        const canvas  = await createPinCanvas(symbol, color, 28);
+        const ctx2    = canvas.getContext('2d');
+        const imgData = ctx2.getImageData(0, 0, canvas.width, canvas.height);
+        // Remove stale image first if it exists, then re-add
+        if (map.hasImage(imageName)) map.removeImage(imageName);
+        map.addImage(imageName, { width: canvas.width, height: canvas.height, data: imgData.data });
+      } catch(e) { console.warn('pin image error', imageName, e); }
+    }));
+
+    // Sources and layers are all gone after setStyle — add everything fresh
+    renderKeys.forEach(key => {
+      if (!buckets[key]?.length) return;
+      const src = `src-${key}`;
+      try {
+        map.addSource(src, { type: 'geojson', data: { type: 'FeatureCollection', features: buckets[key] } });
+      } catch(e) { console.warn('addSource failed', src, e.message); }
+      try { addPolygonLineLayers(key, src); }
+      catch(e) { console.warn('addPolygonLineLayers failed', key, e.message); }
+    });
+    renderKeys.forEach(key => {
+      if (!buckets[key]?.length) return;
+      try { addPointLayer(key, `src-${key}`); }
+      catch(e) { console.warn('addPointLayer failed', key, e.message); }
+    });
+
+    // Re-apply visibility states
+    LAYERS.forEach(l => {
+      if (!state[l.key]) setLayerVisible(l.key, false);
+    });
+  }
+
+  function toggleView() {
+    // Reset solo mode if active
+    if (soloKey !== null) toggleSolo(soloKey);
+    is3D = !is3D;
+    document.getElementById('view-label').textContent = is3D ? '2D' : '3D';
+    const ease = t => t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+
+    if (is3D) {
+      map.easeTo({ pitch: 52, bearing: -20, duration: 900, easing: ease });
+      map.setStyle(VEC_STYLE);
+      map.once('idle', async () => {
+        // Add 3D buildings
+        try {
+          map.addLayer({
+            id: 'buildings-3d',
+            type: 'fill-extrusion',
+            source: 'openmaptiles',
+            'source-layer': 'building',
+            paint: {
+              'fill-extrusion-color': '#d4cfc9',
+              'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 5],
+              'fill-extrusion-base':   ['coalesce', ['get', 'render_min_height'], 0],
+              'fill-extrusion-opacity': 0.9,
+            }
+          });
+        } catch(e) { console.warn('3D buildings layer failed:', e); }
+        await applyDataLayers();
+      });
+    } else {
+      map.easeTo({ pitch: 0, bearing: 0, duration: 700, easing: ease });
+      map.setStyle(SAT_STYLE);
+      map.once('idle', async () => {
+        await applyDataLayers();
+      });
+    }
+  }
+  // ── Fullscreen ───────────────────────────────────────────────────────
+  const FS_ICON_OPEN  = `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`;
+  const FS_ICON_CLOSE = `<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>`;
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  document.addEventListener('fullscreenchange', () => {
+    const icon = document.getElementById('fs-icon');
+    if (icon) icon.innerHTML = document.fullscreenElement ? FS_ICON_CLOSE : FS_ICON_OPEN;
+    setTimeout(() => map.resize(), 100);
+  });
+</script>
+</body>
+</html>
