@@ -26,8 +26,8 @@
         },
         "properties": {
           "group": 4062646475,
-          "stroke": "#1b8893",
-          "title": "Schlot <> Transpart"
+          "title": "Schlot <> Transpart",
+          "stroke": "#1b8893"
         }
       },
       {
@@ -42,8 +42,7 @@
         },
         "properties": {
           "group": 503407754,
-          "marker-color": "#444444",
-          "url": "https://www.facebook.com/ateliertranspart/",
+          "title": "Atelier Transpart",
           "image": {
             "id": "hr0liikjhbsnt88z",
             "w": 295,
@@ -52,8 +51,9 @@
             "avg_color": "#f8f8f8"
           },
           "marker-symbol": "theatre",
-          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/9.%20ATELIER%20TRANSPART.docx?d=wdd0289586e53493d95f8ff65a70f709a&csf=1&web=1&e=rBoNL6)\n***\n📍 [Spacial implications map of Kiosk]\n***\n\nThe gallery / studio is located on Wimhölzelstraße in Franckviertel, Linz in a former Pixel Hotel, an art project as part of Linz 09. The studio includes a work- and showroom and a fully functional small living unit.\n\nThe association was founded in 2016, is based in Linz, and aims to build, support, and facilitate transnational exchange of organizations and initiatives that link political and cultural/artistic content and promote societal participation.\n\nThis is to be achieved, among other things, through the implementation of projects, consulting individuals and organizations, as well as through project collaborations with organizations pursuing similar goals.",
-          "title": "Atelier Transpart"
+          "url": "https://www.facebook.com/ateliertranspart/",
+          "marker-color": "#444444",
+          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/9.%20ATELIER%20TRANSPART.docx?d=wdd0289586e53493d95f8ff65a70f709a&csf=1&web=1&e=rBoNL6)\n***\n📍 [Spacial implications map of Kiosk]\n***\n\nThe gallery / studio is located on Wimhölzelstraße in Franckviertel, Linz in a former Pixel Hotel, an art project as part of Linz 09. The studio includes a work- and showroom and a fully functional small living unit.\n\nThe association was founded in 2016, is based in Linz, and aims to build, support, and facilitate transnational exchange of organizations and initiatives that link political and cultural/artistic content and promote societal participation.\n\nThis is to be achieved, among other things, through the implementation of projects, consulting individuals and organizations, as well as through project collaborations with organizations pursuing similar goals."
         }
       },
       {
@@ -68,8 +68,7 @@
         },
         "properties": {
           "group": 2582683688,
-          "marker-color": "#ffcc00",
-          "url": "https://www.dioezese-linz.at/linz-donbosco&ts=1763477721370",
+          "title": "Don Bosco",
           "image": {
             "id": "9a6sewvy4ml4c6sl",
             "w": 400,
@@ -78,8 +77,9 @@
             "avg_color": "#999ea1"
           },
           "marker-symbol": "church",
-          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/04.%20DON%20BOSCO.docx?d=w97cb360253ab4ed092e11419b9a0daeb&csf=1&web=1&e=7iil0T)\n***\n📍 [Spacial implications map of Kiosk]\n***",
-          "title": "Don Bosco"
+          "url": "https://www.dioezese-linz.at/linz-donbosco&ts=1763477721370",
+          "marker-color": "#ffcc00",
+          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/04.%20DON%20BOSCO.docx?d=w97cb360253ab4ed092e11419b9a0daeb&csf=1&web=1&e=7iil0T)\n***\n📍 [Spacial implications map of Kiosk]\n***"
         }
       },
       {
@@ -94,8 +94,7 @@
         },
         "properties": {
           "group": 1313780760,
-          "marker-color": "#3cc954",
-          "url": "http://www.franckkistl.at/",
+          "title": "Franckkistl",
           "image": {
             "id": "40pxhpfg9xjxrxxy",
             "w": 400,
@@ -104,8 +103,9 @@
             "avg_color": "#847e7a"
           },
           "marker-symbol": "recycle",
-          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/8.%20FRANCK%20KISTL%20(1).docx?d=w053c500edb29481fa1b156108ea234da&csf=1&web=1&e=N2qlls)\n***\n📍 [Spacial implications map of Kiosk](https://ufgat.sharepoint.com/sites/OG-Summersemester20242/Freigegebene%20Dokumente/Forms/AllItems.aspx?viewid=051ab864%2D6ff3%2D41c3%2D8932%2D13e8bf4a54eb&id=%2Fsites%2FOG%2DSummersemester20242%2FFreigegebene%20Dokumente%2FGeneral%2FAcademic%20Year%202025%2D26%2FBA%5FStadtLaborLinz%5FFrankviertel%2FSOCIAL%20RELATIONS%2FSpatial%20Implications%2FFRANKISTL%2F2nd%20Trial%2FTECNICO%20ORIZZ%2Epdf&parent=%2Fsites%2FOG%2DSummersemester20242%2FFreigegebene%20Dokumente%2FGeneral%2FAcademic%20Year%202025%2D26%2FBA%5FStadtLaborLinz%5FFrankviertel%2FSOCIAL%20RELATIONS%2FSpatial%20Implications%2FFRANKISTL%2F2nd%20Trial)\n***\n\nThe *Foodcoop Franck Kistl* stands for food sovereignty, good neighborly relations, sustainability, solidarity, environmental protection, and new ideas.",
-          "title": "Franckkistl"
+          "url": "http://www.franckkistl.at/",
+          "marker-color": "#3cc954",
+          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/8.%20FRANCK%20KISTL%20(1).docx?d=w053c500edb29481fa1b156108ea234da&csf=1&web=1&e=N2qlls)\n***\n📍 [Spacial implications map of Kiosk](https://ufgat.sharepoint.com/sites/OG-Summersemester20242/Freigegebene%20Dokumente/Forms/AllItems.aspx?viewid=051ab864%2D6ff3%2D41c3%2D8932%2D13e8bf4a54eb&id=%2Fsites%2FOG%2DSummersemester20242%2FFreigegebene%20Dokumente%2FGeneral%2FAcademic%20Year%202025%2D26%2FBA%5FStadtLaborLinz%5FFrankviertel%2FSOCIAL%20RELATIONS%2FSpatial%20Implications%2FFRANKISTL%2F2nd%20Trial%2FTECNICO%20ORIZZ%2Epdf&parent=%2Fsites%2FOG%2DSummersemester20242%2FFreigegebene%20Dokumente%2FGeneral%2FAcademic%20Year%202025%2D26%2FBA%5FStadtLaborLinz%5FFrankviertel%2FSOCIAL%20RELATIONS%2FSpatial%20Implications%2FFRANKISTL%2F2nd%20Trial)\n***\n\nThe *Foodcoop Franck Kistl* stands for food sovereignty, good neighborly relations, sustainability, solidarity, environmental protection, and new ideas."
         }
       },
       {
@@ -120,8 +120,7 @@
         },
         "properties": {
           "group": 119948973,
-          "marker-color": "#b63681",
-          "url": "https://vjf.at/franx/",
+          "title": "Jugendzentrum FRANX",
           "image": {
             "id": "cc85kkkd0mkw0fmb",
             "w": 400,
@@ -129,8 +128,9 @@
             "tip_color": "#6db9cd",
             "avg_color": "#91565e"
           },
-          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/11.%20JUGENDZENTRUM%20%20FRANX.docx?d=w2830481069f7429c99f37c9904a3814e&csf=1&web=1&e=4I4IHC)\n***\n📍 [Spacial implications map of Kiosk]\n***",
-          "title": "Jugendzentrum FRANX"
+          "url": "https://vjf.at/franx/",
+          "marker-color": "#b63681",
+          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/11.%20JUGENDZENTRUM%20%20FRANX.docx?d=w2830481069f7429c99f37c9904a3814e&csf=1&web=1&e=4I4IHC)\n***\n📍 [Spacial implications map of Kiosk]\n***"
         }
       },
       {
@@ -145,8 +145,7 @@
         },
         "properties": {
           "group": 2570046293,
-          "marker-color": "#cc1b15",
-          "url": "https://franckkistl.at/das-kistl/kiosk-initiative/",
+          "title": "Kiosk",
           "image": {
             "id": "wybdzs8c6kf9fj8x",
             "w": 400,
@@ -155,8 +154,9 @@
             "avg_color": "#a0a5a3"
           },
           "marker-symbol": "house",
-          "description": "***\n📝 [Internal S&D Documentation on Kiosk](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/01.%20KIOSK.docx?d=wcc30e6351dbe41de97b712aae72de663&csf=1&web=1&e=VR6VXi)\n***\n📍 [Spacial implications map of Kiosk](https://ufgat.sharepoint.com/sites/OG-Summersemester20242/Freigegebene%20Dokumente/Forms/AllItems.aspx?viewid=051ab864%2D6ff3%2D41c3%2D8932%2D13e8bf4a54eb&id=%2Fsites%2FOG%2DSummersemester20242%2FFreigegebene%20Dokumente%2FGeneral%2FAcademic%20Year%202025%2D26%2FBA%5FStadtLaborLinz%5FFrankviertel%2FSOCIAL%20RELATIONS%2FSpatial%20Implications%2FKIOSK%2FS%2EP%2E%205th%20trial%2FKIOSK%2DMAP%2002%2011%2E01%2E26%2D01%20GRANDE%2Epdf&parent=%2Fsites%2FOG%2DSummersemester20242%2FFreigegebene%20Dokumente%2FGeneral%2FAcademic%20Year%202025%2D26%2FBA%5FStadtLaborLinz%5FFrankviertel%2FSOCIAL%20RELATIONS%2FSpatial%20Implications%2FKIOSK%2FS%2EP%2E%205th%20trial)\n***\n\n# Was ist der Kiosk?\nA joint project involving various initiatives, associations, and private individuals in Linz’s Franckviertel district. The neighborhood association Franck Kistl has been involved from the very beginning and has since become a very strong driving force within this initiative. It is also committed to the long-term use of this special place in this unique district.\n\nThe initiative focuses on the participatory use of a unique building—almost entirely vacant—together with its surrounding open spaces, which hold great architectural and symbolic significance for the neighborhood. The initiative was launched in autumn 2019 as part of the social platform of the district office “Leben im Franckviertel” (“Life in the Franckviertel”).",
-          "title": "Kiosk"
+          "url": "https://franckkistl.at/das-kistl/kiosk-initiative/",
+          "marker-color": "#cc1b15",
+          "description": "***\n📝 [Internal S&D Documentation on Kiosk](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/01.%20KIOSK.docx?d=wcc30e6351dbe41de97b712aae72de663&csf=1&web=1&e=VR6VXi)\n***\n📍 [Spacial implications map of Kiosk](https://ufgat.sharepoint.com/sites/OG-Summersemester20242/Freigegebene%20Dokumente/Forms/AllItems.aspx?viewid=051ab864%2D6ff3%2D41c3%2D8932%2D13e8bf4a54eb&id=%2Fsites%2FOG%2DSummersemester20242%2FFreigegebene%20Dokumente%2FGeneral%2FAcademic%20Year%202025%2D26%2FBA%5FStadtLaborLinz%5FFrankviertel%2FSOCIAL%20RELATIONS%2FSpatial%20Implications%2FKIOSK%2FS%2EP%2E%205th%20trial%2FKIOSK%2DMAP%2002%2011%2E01%2E26%2D01%20GRANDE%2Epdf&parent=%2Fsites%2FOG%2DSummersemester20242%2FFreigegebene%20Dokumente%2FGeneral%2FAcademic%20Year%202025%2D26%2FBA%5FStadtLaborLinz%5FFrankviertel%2FSOCIAL%20RELATIONS%2FSpatial%20Implications%2FKIOSK%2FS%2EP%2E%205th%20trial)\n***\n\n# Was ist der Kiosk?\nA joint project involving various initiatives, associations, and private individuals in Linz’s Franckviertel district. The neighborhood association Franck Kistl has been involved from the very beginning and has since become a very strong driving force within this initiative. It is also committed to the long-term use of this special place in this unique district.\n\nThe initiative focuses on the participatory use of a unique building—almost entirely vacant—together with its surrounding open spaces, which hold great architectural and symbolic significance for the neighborhood. The initiative was launched in autumn 2019 as part of the social platform of the district office “Leben im Franckviertel” (“Life in the Franckviertel”)."
         }
       },
       {
@@ -171,7 +171,7 @@
         },
         "properties": {
           "group": 3897158719,
-          "marker-color": "#cc1b15",
+          "title": "Nachbarschafts Café",
           "image": {
             "id": "gv2rtqiixd8uqju0",
             "w": 400,
@@ -180,8 +180,8 @@
             "avg_color": "#817d7a"
           },
           "marker-symbol": "toilets",
-          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/03.%20NACHBARCAFE.docx?d=w9b5f6b4afe9a46e8a75f9a02bd299ac8&csf=1&web=1&e=KhSGPc)\n***\nIt all started parallelly to Kiosk foundation around 2019. People from Kiosk (Anna Janssen and others), started organizing some meetings at the Stadtteilzentrum to discuss about the future of the Neighborhood. During that times the assosiation called PROGES took in charge the space in Stieglbauernstraße 11 in order to promote cultural initiatives. Here the need found the offer so this woman Anita Kunik, started this initiative of the Nachbarcafè every tuesday in that space. Usually PROGES works with 3 years last long project, but since the nachbarcafè was running so well they extended the rental contract with GWG. \n\nMeanwhile Anita Kunik was hired by the Uberdemtellerand assosiation. Here appears Karin (the woman who’s keeping alive Nachbarcafè now), who got to know this initiative after participating one day at the Kiosk’s community garden. This initiative involved her totally and really helped her heal after depression illness.   \n\nNow (January 2026) we arrived at the crash point because the contract has just expired and GWG wants Karin to pay, she truly believe she can find financial support by friends but the reality is a bit different.",
-          "title": "Nachbarschafts Café"
+          "marker-color": "#cc1b15",
+          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/03.%20NACHBARCAFE.docx?d=w9b5f6b4afe9a46e8a75f9a02bd299ac8&csf=1&web=1&e=KhSGPc)\n***\nIt all started parallelly to Kiosk foundation around 2019. People from Kiosk (Anna Janssen and others), started organizing some meetings at the Stadtteilzentrum to discuss about the future of the Neighborhood. During that times the assosiation called PROGES took in charge the space in Stieglbauernstraße 11 in order to promote cultural initiatives. Here the need found the offer so this woman Anita Kunik, started this initiative of the Nachbarcafè every tuesday in that space. Usually PROGES works with 3 years last long project, but since the nachbarcafè was running so well they extended the rental contract with GWG. \n\nMeanwhile Anita Kunik was hired by the Uberdemtellerand assosiation. Here appears Karin (the woman who’s keeping alive Nachbarcafè now), who got to know this initiative after participating one day at the Kiosk’s community garden. This initiative involved her totally and really helped her heal after depression illness.   \n\nNow (January 2026) we arrived at the crash point because the contract has just expired and GWG wants Karin to pay, she truly believe she can find financial support by friends but the reality is a bit different."
         }
       },
       {
@@ -196,8 +196,7 @@
         },
         "properties": {
           "group": 821170536,
-          "marker-color": "#cc1b15",
-          "url": "https://www.pmooe.at/",
+          "title": "pro mente",
           "image": {
             "id": "jzgunzsqdyxm3ycc",
             "w": 400,
@@ -205,8 +204,9 @@
             "tip_color": "#a57156",
             "avg_color": "#797372"
           },
-          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/12.%20ProMente.docx?d=wa1228932564e4c77a65f2dc7d29a22b7&csf=1&web=1&e=Ho5t9v)\n***\n📍 [Spacial implications map of Kiosk]\n***\nIt’s one of the biggest organisations which supports people with mental and social difficulties in Upper Austria. It was created in 1964 and got the name “pro mente infirmis”. They were created to protect the rights of people with mental issues. \n\nIn 1967 was opened the first consulting and supportive services \n\nIn 1970-1980 was invented first addiction prevention programs and support of youth.\n\nIn the 1990s the organisation started helping with work integration. They created the organisation called “Arbeitsassistenz” and programs which help people with mental disorders to find employment. \n\nOver the last 30 years Pro Mente OÖ became the biggest professional support system providing psychotherapy, consultations, mobile assistance, help with finding housing, prevention of addiction, support of youth and labor integration programs. \n\nThey get funding through subsidies, partnerships with government agencies and other sources such as Land OberÖsterreich, AMS, etc.",
-          "title": "pro mente"
+          "url": "https://www.pmooe.at/",
+          "marker-color": "#cc1b15",
+          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/12.%20ProMente.docx?d=wa1228932564e4c77a65f2dc7d29a22b7&csf=1&web=1&e=Ho5t9v)\n***\n📍 [Spacial implications map of Kiosk]\n***\nIt’s one of the biggest organisations which supports people with mental and social difficulties in Upper Austria. It was created in 1964 and got the name “pro mente infirmis”. They were created to protect the rights of people with mental issues. \n\nIn 1967 was opened the first consulting and supportive services \n\nIn 1970-1980 was invented first addiction prevention programs and support of youth.\n\nIn the 1990s the organisation started helping with work integration. They created the organisation called “Arbeitsassistenz” and programs which help people with mental disorders to find employment. \n\nOver the last 30 years Pro Mente OÖ became the biggest professional support system providing psychotherapy, consultations, mobile assistance, help with finding housing, prevention of addiction, support of youth and labor integration programs. \n\nThey get funding through subsidies, partnerships with government agencies and other sources such as Land OberÖsterreich, AMS, etc."
         }
       },
       {
@@ -221,8 +221,7 @@
         },
         "properties": {
           "group": 962036249,
-          "marker-color": "#1b8893",
-          "url": "https://schlot.info",
+          "title": "Schlot",
           "image": {
             "id": "xnk1crn37zoihys7",
             "w": 400,
@@ -231,8 +230,9 @@
             "avg_color": "#b3cab5"
           },
           "marker-symbol": "theatre",
-          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/02.%20SCHLOT.docx?d=w2a84cebfd91d49f28503a797ec71184c&csf=1&web=1&e=GxvyZR)\n***\n📍 [Spacial implications map of Kiosk]\n***\nThe cultural association Schlot was founded in 2015. Birgit Kolbinger was looking for her own studio. She found a hall in the Frankviertel, on the site of the former mattress factory \"Fehrer.\" \n\nSchlot started with 3 artists and 2 musicians and gradually extended and expanded their rooms. \n\nIt took 5 years to get fundings by the city. Until then, all members had to chip in with their private money. \n\nBy now Schlot hosts 10 artists and 5 bands use their rehearsal room",
-          "title": "Schlot"
+          "url": "https://schlot.info",
+          "marker-color": "#1b8893",
+          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/02.%20SCHLOT.docx?d=w2a84cebfd91d49f28503a797ec71184c&csf=1&web=1&e=GxvyZR)\n***\n📍 [Spacial implications map of Kiosk]\n***\nThe cultural association Schlot was founded in 2015. Birgit Kolbinger was looking for her own studio. She found a hall in the Frankviertel, on the site of the former mattress factory \"Fehrer.\" \n\nSchlot started with 3 artists and 2 musicians and gradually extended and expanded their rooms. \n\nIt took 5 years to get fundings by the city. Until then, all members had to chip in with their private money. \n\nBy now Schlot hosts 10 artists and 5 bands use their rehearsal room"
         }
       },
       {
@@ -247,8 +247,7 @@
         },
         "properties": {
           "group": 3064307908,
-          "marker-color": "#f18729",
-          "url": "https://www.linz.at/serviceguide/viewchapter.php?chapter_id=123237",
+          "title": "Stadtteilzentrum",
           "image": {
             "id": "xwk9mqtghdnhin8v",
             "w": 400,
@@ -257,8 +256,9 @@
             "avg_color": "#978667"
           },
           "marker-symbol": "information",
-          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/07.%20Stadtteilzentrum.docx?d=w44d2055e6e074e69805f69c90e13f27b&csf=1&web=1&e=p4I7QH)\n***\nThey are a team of social workers committed to promoting community life in the neighborhood, and they are here to listen and bring people, ideas and institutions together.  \n\n \n📍 direct dialogue with residents \n\n💡 support in implementing ideas fort he  \n\n🤝 connect people, initiatives and institutions\n\n🗣 advise on everyday challenges",
-          "title": "Stadtteilzentrum"
+          "url": "https://www.linz.at/serviceguide/viewchapter.php?chapter_id=123237",
+          "marker-color": "#f18729",
+          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/07.%20Stadtteilzentrum.docx?d=w44d2055e6e074e69805f69c90e13f27b&csf=1&web=1&e=p4I7QH)\n***\nThey are a team of social workers committed to promoting community life in the neighborhood, and they are here to listen and bring people, ideas and institutions together.  \n\n \n📍 direct dialogue with residents \n\n💡 support in implementing ideas fort he  \n\n🤝 connect people, initiatives and institutions\n\n🗣 advise on everyday challenges"
         }
       },
       {
@@ -273,8 +273,7 @@
         },
         "properties": {
           "group": 416383131,
-          "marker-color": "#8eb4f3",
-          "url": "https://www.stop-partnergewalt.at/linz/",
+          "title": "STOP",
           "image": {
             "id": "qq6q7tcackmupvqd",
             "w": 400,
@@ -283,8 +282,9 @@
             "avg_color": "#7a8995"
           },
           "marker-symbol": "toilets",
-          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/6.%20STOP%20(1).docx?d=w9267640b22eb427882be9c8d894b707a&csf=1&web=1&e=mNVpqn)\n***\n📍 [Spacial implications map of Kiosk]\n***\nDomestic violence and intimate partner violence unfortunately occur everywhere. In the summer of 2021, the Linz Women’s Shelter decided to launch the project StoP – Neighborhoods Without Partner Violence in the Linz-Urfahr district. In the summer of 2022, the project was expanded to include the Franckviertel district.\n\nCurrently, StoP women’s tables are taking place in Linz-Urfahr, and StoP neighborhood tables (to which men are also warmly invited) are being held in Franckviertel. However, we would like to explicitly invite people from all districts of Linz, as well as those who work in Linz, to join us at the women’s or neighborhood tables.",
-          "title": "STOP"
+          "url": "https://www.stop-partnergewalt.at/linz/",
+          "marker-color": "#8eb4f3",
+          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/6.%20STOP%20(1).docx?d=w9267640b22eb427882be9c8d894b707a&csf=1&web=1&e=mNVpqn)\n***\n📍 [Spacial implications map of Kiosk]\n***\nDomestic violence and intimate partner violence unfortunately occur everywhere. In the summer of 2021, the Linz Women’s Shelter decided to launch the project StoP – Neighborhoods Without Partner Violence in the Linz-Urfahr district. In the summer of 2022, the project was expanded to include the Franckviertel district.\n\nCurrently, StoP women’s tables are taking place in Linz-Urfahr, and StoP neighborhood tables (to which men are also warmly invited) are being held in Franckviertel. However, we would like to explicitly invite people from all districts of Linz, as well as those who work in Linz, to join us at the women’s or neighborhood tables."
         }
       },
       {
@@ -299,8 +299,7 @@
         },
         "properties": {
           "group": 1821984392,
-          "marker-color": "#f18729",
-          "url": "https://ueberdentellerrand.org/satelliten/linz/",
+          "title": "Über den Tellerrand",
           "image": {
             "id": "8lm5azlef5gjgurj",
             "w": 400,
@@ -309,8 +308,9 @@
             "avg_color": "#6c5544"
           },
           "marker-symbol": "restaurant",
-          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/05.%20U%CC%88BER%20DEN%20TELLERRAND.docx?d=w14a09fee11d84be2aa82b130306e26c9&csf=1&web=1&e=p6yYFY)\n***\n📍 [Spacial implications map of Kiosk]\n***\nSince 2016, people from different cultures have been coming together in Linz. By cooking and eating together, people get to know one another. Since October 2018, Sternküche has been based in Linz’s Franckviertel district.\n\nSternküche is an open place for everyone. Here, people cook, eat, learn, and laugh together. Community and togetherness are at the heart of what we do.",
-          "title": "Über den Tellerrand"
+          "url": "https://ueberdentellerrand.org/satelliten/linz/",
+          "marker-color": "#f18729",
+          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/05.%20U%CC%88BER%20DEN%20TELLERRAND.docx?d=w14a09fee11d84be2aa82b130306e26c9&csf=1&web=1&e=p6yYFY)\n***\n📍 [Spacial implications map of Kiosk]\n***\nSince 2016, people from different cultures have been coming together in Linz. By cooking and eating together, people get to know one another. Since October 2018, Sternküche has been based in Linz’s Franckviertel district.\n\nSternküche is an open place for everyone. Here, people cook, eat, learn, and laugh together. Community and togetherness are at the heart of what we do."
         }
       },
       {
@@ -325,8 +325,7 @@
         },
         "properties": {
           "group": 3585037107,
-          "marker-color": "#444444",
-          "url": "http://www.linz.at/kultur/raum_37149.asp",
+          "title": "Volkshaus Franckviertel",
           "image": {
             "id": "eomkbolefv2dgd9m",
             "w": 400,
@@ -335,8 +334,9 @@
             "avg_color": "#b2a9ab"
           },
           "marker-symbol": "information",
-          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/10.%20VOLKSHAUS%20FRANCKVIERTEL.docx?d=w4ef524af31c3462485cd144a33c6cfff&csf=1&web=1&e=kxsrxj)\n***\n📍 [Spacial implications map of Kiosk]\n***",
-          "title": "Volkshaus Franckviertel"
+          "url": "http://www.linz.at/kultur/raum_37149.asp",
+          "marker-color": "#444444",
+          "description": "***\n📝 [Internal S&D Documentation](https://ufgat.sharepoint.com/:w:/r/sites/OG-Summersemester20242/Freigegebene%20Dokumente/General/Academic%20Year%202025-26/BA_StadtLaborLinz_Frankviertel/SOCIAL%20RELATIONS/Social%20groups/10.%20VOLKSHAUS%20FRANCKVIERTEL.docx?d=w4ef524af31c3462485cd144a33c6cfff&csf=1&web=1&e=kxsrxj)\n***\n📍 [Spacial implications map of Kiosk]\n***"
         }
       },
       {
@@ -361,8 +361,8 @@
         },
         "properties": {
           "group": 42153673,
-          "stroke": "#f1ae29",
-          "title": "Kiosk <> Stadtteilzentrum"
+          "title": "Kiosk <> Stadtteilzentrum",
+          "stroke": "#f1ae29"
         }
       },
       {
@@ -383,8 +383,8 @@
         },
         "properties": {
           "group": 42153673,
-          "stroke": "#f1ae29",
-          "title": "Kiosk <> Nachbarschafts Café"
+          "title": "Kiosk <> Nachbarschafts Café",
+          "stroke": "#f1ae29"
         }
       },
       {
@@ -409,8 +409,8 @@
         },
         "properties": {
           "group": 42153673,
-          "stroke": "#f1ae29",
-          "title": "Kiosk <> SToP"
+          "title": "Kiosk <> SToP",
+          "stroke": "#f1ae29"
         }
       },
       {
@@ -435,8 +435,8 @@
         },
         "properties": {
           "group": 42153673,
-          "stroke": "#f1ae29",
-          "title": "Kiosk <> Schlot"
+          "title": "Kiosk <> Schlot",
+          "stroke": "#f1ae29"
         }
       },
       {
@@ -461,8 +461,8 @@
         },
         "properties": {
           "group": 42153673,
-          "stroke": "#f1ae29",
-          "title": "Kiosk <> Transpart"
+          "title": "Kiosk <> Transpart",
+          "stroke": "#f1ae29"
         }
       },
       {
@@ -482,11 +482,11 @@
           ]
         },
         "properties": {
-          "stroke-width": 5.3,
           "group": 1402619520,
+          "title": "Anne",
           "stroke": "#f18729",
           "description": "founding member of **FranckKistl** and runs **Kiosk**",
-          "title": "Anne"
+          "stroke-width": 5.3
         }
       },
       {
@@ -520,11 +520,11 @@
           ]
         },
         "properties": {
-          "fill": "#3cc954",
-          "stroke-width": 0.5,
           "group": 1770404253,
+          "title": "Community Garden",
+          "fill": "#3cc954",
           "description": "This small community garden was started without permission.",
-          "title": "Community Garden"
+          "stroke-width": 0.5
         }
       },
       {
@@ -558,11 +558,11 @@
           ]
         },
         "properties": {
-          "fill": "#ffcc00",
-          "stroke-width": 0.5,
           "group": 1770404253,
+          "title": "Display",
+          "fill": "#ffcc00",
           "description": "Kiosk is using this display to communicate their connections throughout Franckviertel.",
-          "title": "Display"
+          "stroke-width": 0.5
         }
       },
       {
@@ -596,11 +596,11 @@
           ]
         },
         "properties": {
-          "fill": "#ffcc00",
-          "stroke-width": 0.5,
           "group": 1770404253,
+          "title": "Display 2",
+          "fill": "#ffcc00",
           "description": "This dispaly is used for artistic interventions organized by Kiosk and partners, e.g. Schlot.",
-          "title": "Display 2"
+          "stroke-width": 0.5
         }
       },
       {
@@ -634,11 +634,11 @@
           ]
         },
         "properties": {
-          "fill": "#005e38",
-          "stroke-width": 0.5,
           "group": 1770404253,
+          "title": "Roof",
+          "fill": "#005e38",
           "description": "The roof is used to sit under for the Nachbarschafts Cafè or other interventions organized by Kiosk and their partners.",
-          "title": "Roof"
+          "stroke-width": 0.5
         }
       },
       {
@@ -693,8 +693,8 @@
         },
         "properties": {
           "group": 1770404253,
-          "stroke-width": 0.5,
           "description": "Kiosk managed to claim quite a space by using (and paying the city for!) single spaces that are available.",
+          "stroke-width": 0.5,
           "title": "claimed space"
         }
       },
@@ -729,11 +729,11 @@
           ]
         },
         "properties": {
-          "fill": "#8eb4f3",
-          "stroke-width": 1.0,
           "group": 2574095903,
+          "title": "Rooms of Nachbarschafts Cafè",
+          "fill": "#8eb4f3",
           "description": "including room to gather and cook coffee, as well as a toilet.",
-          "title": "Rooms of Nachbarschafts Cafè"
+          "stroke-width": 1.0
         }
       },
       {
@@ -804,11 +804,11 @@
           ]
         },
         "properties": {
-          "fill": "#3cc954",
-          "stroke-width": 0.5,
           "group": 3593563621,
+          "title": "garden",
+          "fill": "#3cc954",
           "description": "Schlot shares a common garden with ProMente",
-          "title": "garden"
+          "stroke-width": 0.5
         }
       },
       {
@@ -842,11 +842,11 @@
           ]
         },
         "properties": {
-          "fill": "#e32c31",
-          "stroke-width": 0.5,
           "group": 3593563621,
+          "title": "Rooms of Schlot",
+          "fill": "#e32c31",
           "description": "stage, workshop, and rehearsal rooms",
-          "title": "Rooms of Schlot"
+          "stroke-width": 0.5
         }
       },
       {
@@ -1173,11 +1173,28 @@
           ]
         },
         "properties": {
-          "fill": "#ba8662",
-          "stroke-width": 0.5,
           "group": 2956354706,
+          "title": "Idustrial",
+          "fill": "#ba8662",
           "fill-opacity": 0.83,
-          "title": "Idustrial"
+          "stroke-width": 0.5
+        }
+      },
+      {
+        "type": "Feature",
+        "id": 1945482324,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            14.317533,
+            48.289396
+          ]
+        },
+        "properties": {
+          "group": 2956354706,
+          "marker-color": "#ba8662",
+          "title": "Industiral zone",
+          "marker-symbol": "industry"
         }
       },
       {
@@ -1215,11 +1232,11 @@
           ]
         },
         "properties": {
-          "fill": "#ba8662",
-          "stroke-width": 0.5,
           "group": 2956354706,
+          "title": "???",
+          "fill": "#ba8662",
           "fill-opacity": 0.51,
-          "title": "???"
+          "stroke-width": 0.5
         }
       },
       {
@@ -1799,10 +1816,10 @@
         },
         "properties": {
           "group": 2288844146,
-          "marker-color": "#fb6033",
+          "title": "Schreberstraße",
           "marker-symbol": "building_small",
-          "description": "***\nSchreberstraße 16, 18",
-          "title": "Schreberstraße"
+          "marker-color": "#fb6033",
+          "description": "***\nSchreberstraße 16, 18"
         }
       },
       {
@@ -1836,11 +1853,11 @@
           ]
         },
         "properties": {
-          "fill": "#fb6033",
-          "stroke-width": 0.5,
           "group": 2288844146,
+          "title": "Schreberstraße",
+          "fill": "#fb6033",
           "description": "*Built*: **?**\n*By*: **GWG**",
-          "title": "Schreberstraße"
+          "stroke-width": 0.5
         }
       },
       {
@@ -1942,11 +1959,11 @@
           ]
         },
         "properties": {
-          "fill": "#fb6033",
-          "stroke-width": 0.5,
           "group": 371152971,
+          "title": "Wohnanlage an der Wimhölzelstraße",
+          "fill": "#fb6033",
           "description": "***\n*Built*: **1921 - 1925**\n*By*: **GWG**",
-          "title": "Wohnanlage an der Wimhölzelstraße"
+          "stroke-width": 0.5
         }
       },
       {
@@ -1961,10 +1978,10 @@
         },
         "properties": {
           "group": 371152971,
-          "marker-color": "#fb6033",
+          "title": "Wohnanlage an der Wimhölzelstraße",
           "marker-symbol": "building_small",
-          "description": "***\nWimhölzelstraße 17- 37\nIng.-Stern-Straße 22, 24\nHelletzgruberstraße 18 - 34\nSchreberstraße 15 - 17",
-          "title": "Wohnanlage an der Wimhölzelstraße"
+          "marker-color": "#fb6033",
+          "description": "***\nWimhölzelstraße 17- 37\nIng.-Stern-Straße 22, 24\nHelletzgruberstraße 18 - 34\nSchreberstraße 15 - 17"
         }
       },
       {
@@ -1998,11 +2015,11 @@
           ]
         },
         "properties": {
-          "fill": "#444444",
-          "stroke-width": 2.9,
           "group": 5619780,
+          "title": "Demolition site",
+          "fill": "#444444",
           "description": "To be demolished in 2026",
-          "title": "Demolition site"
+          "stroke-width": 2.9
         }
       },
       {
@@ -2036,11 +2053,11 @@
           ]
         },
         "properties": {
-          "fill": "#444444",
-          "stroke-width": 2.6,
           "group": 5619780,
+          "title": "Demolition site",
+          "fill": "#444444",
           "description": "To be demolished in 2026",
-          "title": "Demolition site"
+          "stroke-width": 2.6
         }
       },
       {
@@ -2074,11 +2091,11 @@
           ]
         },
         "properties": {
-          "fill": "#444444",
-          "stroke-width": 2.4,
           "group": 5619780,
+          "title": "To be demolished",
+          "fill": "#444444",
           "description": "probably 2029",
-          "title": "To be demolished"
+          "stroke-width": 2.4
         }
       },
       {
@@ -2112,11 +2129,11 @@
           ]
         },
         "properties": {
-          "fill": "#444444",
-          "stroke-width": 2.4,
           "group": 5619780,
+          "title": "To be demolished",
+          "fill": "#444444",
           "description": "probably 2029",
-          "title": "To be demolished"
+          "stroke-width": 2.4
         }
       },
       {
@@ -2166,11 +2183,11 @@
           ]
         },
         "properties": {
-          "fill": "#fb6033",
-          "stroke-width": 0.5,
           "group": 5619780,
+          "title": "Wimhölzel Hinterland",
+          "fill": "#fb6033",
           "description": "***\n*First buildings built:* **1931**\n*By*: **GWG**",
-          "title": "Wimhölzel Hinterland"
+          "stroke-width": 0.5
         }
       },
       {
@@ -2185,9 +2202,9 @@
         },
         "properties": {
           "group": 5619780,
-          "marker-symbol": "building_small",
           "marker-color": "#fb6033",
-          "title": "Wimhölzel Hinterland"
+          "title": "Wimhölzel Hinterland",
+          "marker-symbol": "building_small"
         }
       },
       {
@@ -2202,10 +2219,10 @@
         },
         "properties": {
           "group": 3317824645,
-          "marker-color": "#fb6033",
+          "title": "Kaufleitnergründe",
           "marker-symbol": "building_small",
-          "description": "***\nGarnisonsstraße 27 - 49\nPlanckstraße 2 - 40",
-          "title": "Kaufleitnergründe"
+          "marker-color": "#fb6033",
+          "description": "***\nGarnisonsstraße 27 - 49\nPlanckstraße 2 - 40"
         }
       },
       {
@@ -2239,11 +2256,11 @@
           ]
         },
         "properties": {
-          "fill": "#fb6033",
-          "stroke-width": 0.5,
           "group": 3317824645,
+          "title": "Kaufleitnergründe",
+          "fill": "#fb6033",
           "description": "*Built:* **1925**\n*By:* **GWG**\n*Social Housing*\n***\n# Additional Information:\n...",
-          "title": "Kaufleitnergründe"
+          "stroke-width": 0.5
         }
       },
       {
@@ -2277,11 +2294,11 @@
           ]
         },
         "properties": {
-          "fill": "#fb6033",
-          "stroke-width": 0.5,
           "group": 3317824645,
+          "title": "Kaufleitnergründe",
+          "fill": "#fb6033",
           "description": "*Built:* **1925**\n*By:* **GWG**\n*Social Housing*\n***\n# Additional Information:\n...",
-          "title": "Kaufleitnergründe"
+          "stroke-width": 0.5
         }
       },
       {
@@ -2363,11 +2380,11 @@
           ]
         },
         "properties": {
-          "fill": "#fb6033",
-          "stroke-width": 0.5,
           "group": 2007245804,
+          "title": "Dr. Karl Renner Hof",
+          "fill": "#fb6033",
           "description": "*Erbaut:* **1942**\n*Von:* **...**\n*Sozialer Wohnbau*\n***\n# Additional Information:\n...",
-          "title": "Dr. Karl Renner Hof"
+          "stroke-width": 0.5
         }
       },
       {
@@ -2382,10 +2399,10 @@
         },
         "properties": {
           "group": 2007245804,
-          "marker-color": "#fb6033",
+          "title": "Dr. Karl Renner Hof",
           "marker-symbol": "building_small",
-          "description": "****\nFranckstraße 7, 7a-d, 9, 11, 13, 15\nLiebigstraße 3, 5, 7, 9, 11, 13",
-          "title": "Dr. Karl Renner Hof"
+          "marker-color": "#fb6033",
+          "description": "****\nFranckstraße 7, 7a-d, 9, 11, 13, 15\nLiebigstraße 3, 5, 7, 9, 11, 13"
         }
       },
       {
@@ -2400,10 +2417,10 @@
         },
         "properties": {
           "group": 2327717020,
-          "marker-color": "#482d9e",
+          "title": "Helletzgruberstraße",
           "marker-symbol": "building_small",
-          "description": "***\nHelletzgruberstraße 4, 6",
-          "title": "Helletzgruberstraße"
+          "marker-color": "#482d9e",
+          "description": "***\nHelletzgruberstraße 4, 6"
         }
       },
       {
@@ -2437,11 +2454,11 @@
           ]
         },
         "properties": {
-          "fill": "#482d9e",
-          "stroke-width": 0.5,
           "group": 2327717020,
+          "title": "Helletzgruberstraße",
+          "fill": "#482d9e",
           "description": "*Built*: **?**\n*By*: **BRW - Bau Reform Wohnstätte**",
-          "title": "Helletzgruberstraße"
+          "stroke-width": 0.5
         }
       },
       {
@@ -2479,12 +2496,12 @@
           ]
         },
         "properties": {
-          "fill": "#8eb4f3",
-          "stroke-width": 0.5,
           "group": 1409175993,
+          "title": "CS Wimhölzel Hinterland",
+          "fill": "#8eb4f3",
           "fill-opacity": 0.6,
           "description": "Construction site, starting idk",
-          "title": "CS Wimhölzel Hinterland"
+          "stroke-width": 0.5
         }
       },
       {
@@ -2526,11 +2543,11 @@
           ]
         },
         "properties": {
-          "fill": "#8eb4f3",
-          "stroke-width": 0.5,
           "group": 1409175993,
+          "title": "CS Nestle",
+          "fill": "#8eb4f3",
           "fill-opacity": 0.6,
-          "title": "CS Nestle"
+          "stroke-width": 0.5
         }
       },
       {
@@ -2564,11 +2581,11 @@
           ]
         },
         "properties": {
-          "fill": "#cc1b15",
-          "stroke-width": 2.4,
           "group": 2509181363,
+          "title": "New building",
+          "fill": "#cc1b15",
           "description": "*Start of construction*: **2023**",
-          "title": "New building"
+          "stroke-width": 2.4
         }
       },
       {
@@ -2602,11 +2619,11 @@
           ]
         },
         "properties": {
-          "fill": "#cc1b15",
-          "stroke-width": 2.4,
           "group": 2509181363,
+          "title": "New building",
+          "fill": "#cc1b15",
           "description": "*Start of construction*: **2023**",
-          "title": "New building"
+          "stroke-width": 2.4
         }
       },
       {
@@ -2640,11 +2657,11 @@
           ]
         },
         "properties": {
-          "fill": "#cc1b15",
-          "stroke-width": 2.4,
           "group": 2509181363,
+          "title": "New building",
+          "fill": "#cc1b15",
           "description": "*Start of construction*: **2023**",
-          "title": "New building"
+          "stroke-width": 2.4
         }
       },
       {
@@ -2678,11 +2695,11 @@
           ]
         },
         "properties": {
-          "fill": "#cc1b15",
-          "stroke-width": 2.4,
           "group": 2509181363,
+          "title": "New building",
+          "fill": "#cc1b15",
           "description": "*Start of construction*: **2023**",
-          "title": "New building"
+          "stroke-width": 2.4
         }
       },
       {
@@ -2716,11 +2733,11 @@
           ]
         },
         "properties": {
-          "fill": "#cc1b15",
-          "stroke-width": 2.4,
           "group": 2509181363,
+          "title": "Re-built",
+          "fill": "#cc1b15",
           "description": "Built in *2017*\nBecause of a gas explosion in *2013*",
-          "title": "Re-built"
+          "stroke-width": 2.4
         }
       },
       {
@@ -2757,25 +2774,9 @@
         },
         "properties": {
           "group": 3119596610,
-          "stroke": "#cc1b15",
           "stroke-width": 7.0,
-          "title": "New item"
-        }
-      },
-      {
-        "type": "Feature",
-        "id": 1945482324,
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            14.317533,
-            48.289396
-          ]
-        },
-        "properties": {
-          "marker-symbol": "industry",
-          "marker-color": "#ba8662",
-          "title": "Industiral zone"
+          "title": "New item",
+          "stroke": "#cc1b15"
         }
       }
     ],
@@ -2955,7 +2956,7 @@
   "viewer_users": [],
   "editor_users": [],
   "created_date": "2026-01-22T09:32:16",
-  "modified_date": "2026-03-12T10:35:21",
+  "modified_date": "2026-03-12T17:06:45",
   "images": [
     "40pxhpfg9xjxrxxy",
     "8lm5azlef5gjgurj",
