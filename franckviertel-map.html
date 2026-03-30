@@ -613,38 +613,50 @@
         const cls    = key === 'housing' ? 'b' : key === 'connections' ? 'c' : 'a';
         const extUrl = props.url || '';
 
-        // ── Process description: fix all links to open in new tab ──
-        let rawDesc = props.description || '';
-        const descHtml = rawDesc ? marked.parse(rawDesc) : '';
-        // After marked renders, patch all <a> tags to open externally
-        const desc = descHtml.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
-
-        // ── Detect YouTube links in description or url ──
+        // ── Embed helpers ──
         function youtubeEmbed(url) {
           const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
           return m ? `<div class="popup-embed"><iframe src="https://www.youtube.com/embed/${m[1]}" frameborder="0" allowfullscreen></iframe></div>` : null;
         }
-
-        // ── Detect PDF links ──
         function pdfEmbed(url) {
-          return url.match(/\.pdf(\?|$)/i)
+          return /\.pdf(\?|$)/i.test(url)
             ? `<div class="popup-pdf"><iframe src="${url}" title="PDF"></iframe></div>`
             : null;
         }
+        function makeEmbed(url) { return youtubeEmbed(url) || pdfEmbed(url) || null; }
 
-        // ── Scan description for embeddable links ──
+        // ── Process description ──
+        // 1. Before markdown parsing: replace embeddable URLs with placeholders
+        let rawDesc = props.description || '';
+        const embedMap = {};
+        let embedIdx = 0;
+        // Match bare URLs and markdown links [text](url)
+        rawDesc = rawDesc.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)|(https?:\/\/\S+)/g, (match, mdText, mdUrl, bareUrl) => {
+          const url = mdUrl || bareUrl;
+          const embed = makeEmbed(url);
+          if (embed) {
+            const key = `%%EMBED_${embedIdx++}%%`;
+            embedMap[key] = embed;
+            return key;
+          }
+          return match; // leave unchanged, marked will render it normally
+        });
+
+        // 2. Parse remaining markdown
+        let desc = rawDesc ? marked.parse(rawDesc) : '';
+
+        // 3. Replace placeholders with actual embed HTML
+        Object.entries(embedMap).forEach(([key, html]) => {
+          desc = desc.replace(key, html);
+        });
+
+        // 4. All remaining <a> tags: add target=_blank
+        desc = desc.replace(/<a(?=\s)/g, '<a target="_blank" rel="noopener noreferrer"');
+
+        // ── extUrl: embed or link (shown after description if not already in desc) ──
         let embedHtml = '';
-        const linkMatches = [...rawDesc.matchAll(/https?:\/\/[^\s\)\]"<]+/g)];
-        for (const m of linkMatches) {
-          const u = m[0];
-          const yt = youtubeEmbed(u);
-          if (yt)  { embedHtml = yt;  break; }
-          const pd = pdfEmbed(u);
-          if (pd)  { embedHtml = pd;  break; }
-        }
-        // Also check extUrl
-        if (!embedHtml && extUrl) {
-          embedHtml = youtubeEmbed(extUrl) || pdfEmbed(extUrl) || '';
+        if (extUrl) {
+          embedHtml = makeEmbed(extUrl) || '';
         }
 
         let imgHtml = '';
