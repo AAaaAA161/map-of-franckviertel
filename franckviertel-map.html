@@ -1453,29 +1453,28 @@
 
   function scheduleNextCrossfade(audio) {
     if (!_audioPlaying) return;
-    // How long until we should start crossfading (duration - xfade window)
+    clearTimeout(_loopTimeout);
     const remaining = (audio.duration - audio.currentTime) * 1000 - XFADE_MS;
-    if (!isFinite(remaining) || remaining < 0) {
-      // Duration not known yet — retry shortly
-      _loopTimeout = setTimeout(() => scheduleNextCrossfade(audio), 500);
+    if (!isFinite(remaining) || remaining < 100) {
+      _loopTimeout = setTimeout(() => scheduleNextCrossfade(audio), 200);
       return;
     }
     _loopTimeout = setTimeout(() => {
       if (!_audioPlaying) return;
       const next = (_currentAudio === _audioA) ? _audioB : _audioA;
+      next.currentTime = 0;
+      next.volume = 0;
+      next.play().catch(() => {});
       crossfadeTo(next, XFADE_MS);
-      // Schedule the one after that
-      next.addEventListener('canplaythrough', function onReady() {
-        next.removeEventListener('canplaythrough', onReady);
-        scheduleNextCrossfade(next);
-      }, { once: true });
-      scheduleNextCrossfade(next);
+      // After crossfade completes, schedule the next one
+      setTimeout(() => scheduleNextCrossfade(next), XFADE_MS + 100);
     }, Math.max(remaining, 0));
   }
 
   function startAmbient() {
     if (!_audioA) { _audioA = makeAudioNode(); _audioB = makeAudioNode(); }
     _currentAudio = _audioA;
+    _audioA.currentTime = 0;
     _audioA.play().catch(() => {});
     // Fade in
     const steps = 80;
@@ -1485,10 +1484,13 @@
       if (_audioA) _audioA.volume = Math.min((i / steps) * AMBIENT_VOL, AMBIENT_VOL);
       if (i >= steps) clearInterval(fadeIn);
     }, 50);
-    // Start scheduling crossfades once duration is known
-    _audioA.addEventListener('canplaythrough', () => {
-      scheduleNextCrossfade(_audioA);
-    }, { once: true });
+    // Wait for duration to be available then start scheduling
+    const waitForDuration = setInterval(() => {
+      if (_audioA && isFinite(_audioA.duration) && _audioA.duration > 0) {
+        clearInterval(waitForDuration);
+        scheduleNextCrossfade(_audioA);
+      }
+    }, 300);
   }
 
   function stopAmbient() {
