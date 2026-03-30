@@ -427,6 +427,11 @@
       top: 0; left: 0;
       width: 100%;
       height: 40px; /* only cover top bar with title/logo */
+    }
+    .yt-overlay-bottom {
+      top: auto;
+      bottom: 0;
+      height: 40px; /* cover bottom bar */
       z-index: 1;
       cursor: default;
     }
@@ -744,6 +749,7 @@
             <div class="popup-embed">
               <iframe class="yt-frame" src="https://www.youtube.com/embed/${m[1]}?modestbranding=1&rel=0&iv_load_policy=3&fs=0" frameborder="0"></iframe>
               <div class="yt-overlay"></div>
+              <div class="yt-overlay yt-overlay-bottom"></div>
             </div>
           </details>`;
         }
