@@ -644,7 +644,7 @@
           if (!m) return null;
           const id = `yt-acc-${_embedSerial++}`;
           return `<details class="popup-accordion yt-accordion" id="${id}">
-            <summary>▶ Watch Video</summary>
+            <summary>🎧 Audio Interview</summary>
             <div class="popup-embed">
               <iframe class="yt-frame" src="https://www.youtube.com/embed/${m[1]}" frameborder="0" allowfullscreen></iframe>
             </div>
@@ -655,7 +655,7 @@
           const pdfSrc = url.includes('#') ? url : url + '#toolbar=0';
           const id = `pdf-acc-${_embedSerial++}`;
           return `<details class="popup-accordion pdf-accordion" id="${id}">
-            <summary>📄 View PDF</summary>
+            <summary>📄 Written Interview</summary>
             <div class="popup-pdf">
               <iframe src="${pdfSrc}" title="PDF"></iframe>
             </div>
