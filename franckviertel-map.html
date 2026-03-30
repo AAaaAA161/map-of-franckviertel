@@ -1021,6 +1021,7 @@
   }
 
   function toggleLayer(key) {
+    playClickSound(state[key] ? 380 : 520, 0.09);
     const layer   = LAYERS.find(l => l.key === key);
     const turning = !state[key]; // what we're switching TO
 
@@ -1274,6 +1275,7 @@
   document.addEventListener('toggle', (e) => {
     const acc = e.target;
     if (!acc.classList?.contains('popup-accordion')) return;
+    playClickSound(acc.open ? 520 : 380, 0.09);
     if (!acc.open) {
       // Closing: if it's a YT accordion, stop the video by clearing src
       const frame = acc.querySelector('.yt-frame');
