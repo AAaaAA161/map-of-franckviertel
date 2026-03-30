@@ -1410,35 +1410,90 @@
     } catch(e) {}
   }
 
-  function startAmbient() {
-    if (!_ambientAudio) {
-      _ambientAudio = new Audio('mason.mp3');
-      _ambientAudio.loop   = true;
-      _ambientAudio.volume = 0;   // start silent, fade in
-    }
-    _ambientAudio.play().catch(() => {});
-    // Fade in to low volume over 4s
-    let vol = 0;
-    const target = 0.08; // very quiet
-    const step   = target / 80;
-    const fadeIn = setInterval(() => {
-      vol = Math.min(vol + step, target);
-      if (_ambientAudio) _ambientAudio.volume = vol;
-      if (vol >= target) clearInterval(fadeIn);
+  // Two Audio instances for seamless crossfade loop
+  let _audioA = null;
+  let _audioB = null;
+  let _currentAudio = null;
+  let _loopTimeout  = null;
+  const AMBIENT_VOL = 0.08;
+  const XFADE_MS    = 3000; // crossfade 3s before end
+
+  function makeAudioNode() {
+    const a = new Audio('mason.mp3');
+    a.volume = 0;
+    a.preload = 'auto';
+    return a;
+  }
+
+  function crossfadeTo(next, fadeDuration = XFADE_MS) {
+    const prev = _currentAudio;
+    _currentAudio = next;
+    next.currentTime = 0;
+    next.play().catch(() => {});
+
+    const steps  = fadeDuration / 50;
+    const stepVol = AMBIENT_VOL / steps;
+    let i = 0;
+    const fade = setInterval(() => {
+      i++;
+      if (next.volume < AMBIENT_VOL) next.volume = Math.min(next.volume + stepVol, AMBIENT_VOL);
+      if (prev && prev.volume > 0)   prev.volume  = Math.max(prev.volume  - stepVol, 0);
+      if (i >= steps) {
+        if (prev) prev.pause();
+        clearInterval(fade);
+      }
     }, 50);
   }
 
-  function stopAmbient() {
-    if (!_ambientAudio) return;
-    // Fade out over 2s
-    const fadeOut = setInterval(() => {
-      if (!_ambientAudio) { clearInterval(fadeOut); return; }
-      _ambientAudio.volume = Math.max(_ambientAudio.volume - 0.004, 0);
-      if (_ambientAudio.volume <= 0) {
-        _ambientAudio.pause();
-        clearInterval(fadeOut);
-      }
+  function scheduleNextCrossfade(audio) {
+    if (!_audioPlaying) return;
+    // How long until we should start crossfading (duration - xfade window)
+    const remaining = (audio.duration - audio.currentTime) * 1000 - XFADE_MS;
+    if (!isFinite(remaining) || remaining < 0) {
+      // Duration not known yet — retry shortly
+      _loopTimeout = setTimeout(() => scheduleNextCrossfade(audio), 500);
+      return;
+    }
+    _loopTimeout = setTimeout(() => {
+      if (!_audioPlaying) return;
+      const next = (_currentAudio === _audioA) ? _audioB : _audioA;
+      crossfadeTo(next, XFADE_MS);
+      // Schedule the one after that
+      next.addEventListener('canplaythrough', function onReady() {
+        next.removeEventListener('canplaythrough', onReady);
+        scheduleNextCrossfade(next);
+      }, { once: true });
+      scheduleNextCrossfade(next);
+    }, Math.max(remaining, 0));
+  }
+
+  function startAmbient() {
+    if (!_audioA) { _audioA = makeAudioNode(); _audioB = makeAudioNode(); }
+    _currentAudio = _audioA;
+    _audioA.play().catch(() => {});
+    // Fade in
+    const steps = 80;
+    let i = 0;
+    const fadeIn = setInterval(() => {
+      i++;
+      if (_audioA) _audioA.volume = Math.min((i / steps) * AMBIENT_VOL, AMBIENT_VOL);
+      if (i >= steps) clearInterval(fadeIn);
     }, 50);
+    // Start scheduling crossfades once duration is known
+    _audioA.addEventListener('canplaythrough', () => {
+      scheduleNextCrossfade(_audioA);
+    }, { once: true });
+  }
+
+  function stopAmbient() {
+    clearTimeout(_loopTimeout);
+    [_audioA, _audioB].forEach(a => {
+      if (!a) return;
+      const fadeOut = setInterval(() => {
+        a.volume = Math.max(a.volume - 0.004, 0);
+        if (a.volume <= 0) { a.pause(); clearInterval(fadeOut); }
+      }, 50);
+    });
   }
 
   function toggleAudio() {
