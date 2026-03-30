@@ -247,95 +247,109 @@
     .maplibregl-popup.is-closing .maplibregl-popup-content { animation: popupSlideOut 0.18s ease-in forwards; }
 
     .maplibregl-popup-content {
-      background: rgba(255,255,255,0.92) !important;
+      background: #f2f0ed !important;
       border: none !important;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 3px !important;
+      border-radius: 6px !important;
       padding: 0 !important;
       font-family: var(--sans);
       color: #1a1a1a;
       font-size: 13px;
-      width: 520px;
+      width: 480px;
       max-width: 90vw;
-      max-height: 70vh;
+      max-height: 72vh;
       overflow-y: auto;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.28) !important;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.32), 0 2px 8px rgba(0,0,0,0.14) !important;
       scrollbar-width: thin;
-      scrollbar-color: rgba(0,0,0,0.2) transparent;
+      scrollbar-color: rgba(0,0,0,0.15) transparent;
     }
 
-    .maplibregl-popup-content::-webkit-scrollbar { width: 5px; }
+    .maplibregl-popup-content::-webkit-scrollbar { width: 4px; }
     .maplibregl-popup-content::-webkit-scrollbar-thumb {
-      background: rgba(0,0,0,0.18);
-      border-radius: 3px;
+      background: rgba(0,0,0,0.15);
+      border-radius: 2px;
     }
 
-    .popup-inner { padding: 16px 20px 18px; }
-
-    .maplibregl-popup-tip { display: none !important; }
-    .maplibregl-popup-close-button {
-      color: rgba(0,0,0,0.4) !important;
-      font-size: 18px !important;
-      right: 10px !important;
-      top: 8px !important;
-      background: none !important;
-      position: sticky !important;
-      float: right;
-      z-index: 2;
-    }
-
-    .popup-title {
-      font-weight: 600;
-      font-size: 14px;
-      margin-bottom: 8px;
-      color: #111111;
-      padding-right: 24px;
-    }
-
-    .popup-desc {
-      font-size: 12px;
-      color: #333333;
-      line-height: 1.6;
+    /* Dark header area */
+    .popup-header {
+      background: #1a1a1a;
+      padding: 18px 20px 16px;
+      position: relative;
     }
 
     .popup-group {
       font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.14em;
+      font-size: 9px;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      margin-top: 10px;
+      margin-bottom: 6px;
+    }
+    .popup-group.a { color: #7eba3a; }
+    .popup-group.b { color: #5ba3e8; }
+    .popup-group.c { color: #e8b85b; }
+
+    .popup-title {
+      font-weight: 500;
+      font-size: 16px;
+      color: #ffffff;
+      line-height: 1.3;
+      padding-right: 28px;
     }
 
-    .popup-group.a { color: #5a8a00; }
-    .popup-group.b { color: #1565c0; }
-    .popup-group.c { color: #7a5a00; }
+    /* Light body area */
+    .popup-inner {
+      padding: 16px 20px 18px;
+      background: #f2f0ed;
+    }
+
+    .popup-desc {
+      font-size: 12.5px;
+      color: #3a3a3a;
+      line-height: 1.65;
+    }
+
+    .maplibregl-popup-tip { display: none !important; }
+    .maplibregl-popup-close-button {
+      color: rgba(255,255,255,0.5) !important;
+      font-size: 20px !important;
+      right: 12px !important;
+      top: 12px !important;
+      background: none !important;
+      position: absolute !important;
+      z-index: 2;
+      line-height: 1;
+    }
+    .maplibregl-popup-close-button:hover {
+      color: rgba(255,255,255,0.9) !important;
+    }
 
     .maplibregl-ctrl-attrib { font-size: 9px !important; opacity: 0.5; }
     .maplibregl-ctrl-logo   { display: none !important; }
 
     .popup-link {
-      display: inline-block;
-      margin: 8px 0 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin: 10px 0 2px;
       font-family: var(--mono);
       font-size: 10px;
       letter-spacing: 0.1em;
-      color: #1565c0;
+      color: #1a1a1a;
       text-decoration: none;
-      opacity: 0.85;
+      border-bottom: 1px solid rgba(0,0,0,0.25);
+      padding-bottom: 1px;
+      opacity: 0.7;
     }
-    .popup-link:hover { opacity: 1; text-decoration: underline; }
+    .popup-link:hover { opacity: 1; }
 
-    .popup-desc p            { margin: 0 0 6px; }
+    .popup-desc p            { margin: 0 0 7px; }
     .popup-desc p:last-child { margin-bottom: 0; }
-    .popup-desc a            { color: #1565c0; text-decoration: none; }
-    .popup-desc a:hover      { text-decoration: underline; }
+    .popup-desc a            { color: #1a5fa8; text-decoration: none; border-bottom: 1px solid rgba(26,95,168,0.3); }
+    .popup-desc a:hover      { border-bottom-color: #1a5fa8; }
+
     .popup-embed {
       position: relative;
       width: 100%;
-      padding-top: 56.25%; /* 16:9 */
-      margin: 10px 0 4px;
-      border-radius: 3px;
+      padding-top: 56.25%;
       overflow: hidden;
       background: #000;
     }
@@ -345,13 +359,7 @@
       width: 100%; height: 100%;
       border: none;
     }
-    .popup-pdf {
-      width: 100%;
-      margin: 10px 0 4px;
-      border-radius: 3px;
-      overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.12);
-    }
+    .popup-pdf { width: 100%; }
     .popup-pdf iframe {
       display: block;
       width: 100%;
@@ -359,27 +367,32 @@
       border: none;
     }
     .popup-accordion {
-      margin: 8px 0 4px;
-      border: 1px solid rgba(0,0,0,0.12);
+      margin: 10px 0 2px;
+      border: 1px solid rgba(0,0,0,0.1);
       border-radius: 4px;
       overflow: hidden;
+      background: #fff;
     }
     .popup-accordion summary {
-      padding: 8px 12px;
-      font-size: 12px;
+      padding: 9px 14px;
+      font-size: 11.5px;
       font-weight: 500;
       cursor: pointer;
-      background: rgba(0,0,0,0.04);
+      background: #fff;
       user-select: none;
       list-style: none;
       display: flex;
       align-items: center;
-      gap: 6px;
-      color: #333;
+      gap: 7px;
+      color: #1a1a1a;
+      letter-spacing: 0.01em;
     }
     .popup-accordion summary::-webkit-details-marker { display: none; }
-    .popup-accordion summary:hover { background: rgba(0,0,0,0.08); }
-    .popup-accordion[open] summary { border-bottom: 1px solid rgba(0,0,0,0.10); }
+    .popup-accordion summary:hover { background: #f7f6f4; }
+    .popup-accordion[open] summary {
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      background: #f7f6f4;
+    }
     .popup-accordion .popup-embed,
     .popup-accordion .popup-pdf { margin: 0; border-radius: 0; border: none; }
     .popup-desc strong       { color: #111111; font-weight: 600; }
@@ -713,16 +726,18 @@
           setTimeout(() => { if (window._activePopup) window._activePopup.remove(); }, 180);
         }
 
-        const popup = new maplibregl.Popup({ closeButton: true, maxWidth: '520px' })
+        const popup = new maplibregl.Popup({ closeButton: true, maxWidth: '480px' })
           .setLngLat(e.lngLat)
           .setHTML(`
             ${imgHtml}
-            <div class="popup-inner">
+            <div class="popup-header">
+              ${gname ? `<div class="popup-group ${cls}">${gname}</div>` : ''}
               <div class="popup-title">${title}</div>
+            </div>
+            <div class="popup-inner">
               ${desc      ? `<div class="popup-desc">${desc}</div>` : ''}
               ${embedHtml}
               ${extUrl && !youtubeEmbed(extUrl) && !pdfEmbed(extUrl) ? `<a class="popup-link" href="${extUrl}" target="_blank" rel="noopener noreferrer">↗ Link</a>` : ''}
-              ${gname     ? `<div class="popup-group ${cls}">${gname}</div>` : ''}
             </div>
           `)
           .addTo(map);
