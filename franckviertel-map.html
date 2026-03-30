@@ -233,49 +233,81 @@
       pointer-events: none;
     }
 
-    @keyframes popupFadeIn  { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes popupFadeOut { from { opacity: 1; } to { opacity: 0; } }
-    @keyframes popupSlideIn  { from { transform: translateY(6px); } to { transform: translateY(0); } }
-    @keyframes popupSlideOut { from { transform: translateY(0); } to { transform: translateY(6px); } }
+    @keyframes sheetIn  { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes sheetOut { from { transform: translateY(0); }    to { transform: translateY(100%); } }
+    @keyframes overlayIn  { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes overlayOut { from { opacity: 1; } to { opacity: 0; } }
 
-    /* opacity only on outer wrapper — does NOT interfere with MapLibre's transform positioning */
-    .maplibregl-popup { animation: popupFadeIn 0.22s ease-out forwards; }
-    .maplibregl-popup.is-closing { animation: popupFadeOut 0.18s ease-in forwards; pointer-events: none; }
-
-    /* slide on inner content only */
-    .maplibregl-popup-content { animation: popupSlideIn 0.22s ease-out forwards; }
-    .maplibregl-popup.is-closing .maplibregl-popup-content { animation: popupSlideOut 0.18s ease-in forwards; }
-
-    .maplibregl-popup-content {
-      background: #f2f0ed !important;
-      border: none !important;
-      border-radius: 6px !important;
-      padding: 0 !important;
-      font-family: var(--sans);
-      color: #1a1a1a;
-      font-size: 13px;
-      width: 480px;
-      max-width: 90vw;
-      max-height: 72vh;
-      overflow-y: auto;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.32), 0 2px 8px rgba(0,0,0,0.14) !important;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(0,0,0,0.15) transparent;
+    /* ── Bottom Sheet Overlay ── */
+    #sheet-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.22);
+      z-index: 100;
+      pointer-events: none;
+    }
+    #sheet-overlay.visible {
+      display: block;
+      animation: overlayIn 0.28s ease forwards;
+    }
+    #sheet-overlay.closing {
+      animation: overlayOut 0.22s ease forwards;
     }
 
-    .maplibregl-popup-content::-webkit-scrollbar { width: 4px; }
-    .maplibregl-popup-content::-webkit-scrollbar-thumb {
-      background: rgba(0,0,0,0.15);
+    /* ── Bottom Sheet ── */
+    #bottom-sheet {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(520px, 100vw);
+      max-height: 70vh;
+      z-index: 101;
+      border-radius: 10px 10px 0 0;
+      overflow: hidden;
+      box-shadow: 0 -4px 32px rgba(0,0,0,0.22), 0 -1px 6px rgba(0,0,0,0.10);
+      display: flex;
+      flex-direction: column;
+    }
+    #bottom-sheet.visible {
+      display: flex;
+      animation: sheetIn 0.32s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    #bottom-sheet.closing {
+      animation: sheetOut 0.22s ease-in forwards;
+    }
+
+    /* drag handle */
+    #sheet-handle {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 4px;
+      background: rgba(255,255,255,0.3);
       border-radius: 2px;
+      z-index: 2;
+      pointer-events: none;
     }
 
-    /* Dark header area */
+    /* accent strip — left edge, color set via JS */
+    #sheet-accent {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      z-index: 2;
+    }
+
+    /* ── Sheet header (dark) ── */
     .popup-header {
       background: #1a1a1a;
-      padding: 18px 20px 16px;
+      padding: 22px 20px 16px 24px;
       position: relative;
+      flex-shrink: 0;
     }
-
     .popup-group {
       font-family: var(--mono);
       font-size: 9px;
@@ -286,42 +318,47 @@
     .popup-group.a { color: #7eba3a; }
     .popup-group.b { color: #5ba3e8; }
     .popup-group.c { color: #e8b85b; }
-
     .popup-title {
       font-weight: 500;
-      font-size: 16px;
+      font-size: 17px;
       color: #ffffff;
       line-height: 1.3;
-      padding-right: 28px;
+      padding-right: 36px;
     }
+    #sheet-close {
+      position: absolute;
+      top: 14px; right: 14px;
+      width: 28px; height: 28px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 50%;
+      color: rgba(255,255,255,0.7);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    #sheet-close:hover { background: rgba(255,255,255,0.2); color: #fff; }
 
-    /* Light body area */
+    /* ── Sheet body (light, scrollable) ── */
     .popup-inner {
-      padding: 16px 20px 18px;
+      padding: 16px 20px 24px 24px;
       background: #f2f0ed;
+      overflow-y: auto;
+      flex: 1;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,0,0,0.15) transparent;
     }
+    .popup-inner::-webkit-scrollbar { width: 4px; }
+    .popup-inner::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
 
     .popup-desc {
-      font-size: 12.5px;
+      font-size: 13px;
       color: #3a3a3a;
       line-height: 1.65;
     }
 
     .maplibregl-popup-tip { display: none !important; }
-    .maplibregl-popup-close-button {
-      color: rgba(255,255,255,0.5) !important;
-      font-size: 20px !important;
-      right: 12px !important;
-      top: 12px !important;
-      background: none !important;
-      position: absolute !important;
-      z-index: 2;
-      line-height: 1;
-    }
-    .maplibregl-popup-close-button:hover {
-      color: rgba(255,255,255,0.9) !important;
-    }
-
     .maplibregl-ctrl-attrib { font-size: 9px !important; opacity: 0.5; }
     .maplibregl-ctrl-logo   { display: none !important; }
 
@@ -363,7 +400,7 @@
     .popup-pdf iframe {
       display: block;
       width: 100%;
-      height: 420px;
+      height: 380px;
       border: none;
     }
     .popup-accordion {
@@ -385,14 +422,10 @@
       align-items: center;
       gap: 7px;
       color: #1a1a1a;
-      letter-spacing: 0.01em;
     }
     .popup-accordion summary::-webkit-details-marker { display: none; }
     .popup-accordion summary:hover { background: #f7f6f4; }
-    .popup-accordion[open] summary {
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-      background: #f7f6f4;
-    }
+    .popup-accordion[open] summary { border-bottom: 1px solid rgba(0,0,0,0.08); background: #f7f6f4; }
     .popup-accordion .popup-embed,
     .popup-accordion .popup-pdf { margin: 0; border-radius: 0; border: none; }
     .popup-desc strong       { color: #111111; font-weight: 600; }
@@ -413,6 +446,12 @@
 
 <div id="status">Lade Kartendaten …</div>
 <div id="map"></div>
+<div id="sheet-overlay"></div>
+<div id="bottom-sheet">
+  <div id="sheet-accent"></div>
+  <div id="sheet-handle"></div>
+  <!-- content injected by JS -->
+</div>
 
 <div id="header">
   <h1>Franckviertel</h1>
@@ -720,67 +759,15 @@
           }
         } catch(err) {}
 
-        if (window._activePopup) {
-          const el = window._activePopup.getElement();
-          if (el) el.classList.add('is-closing');
-          setTimeout(() => { if (window._activePopup) window._activePopup.remove(); }, 180);
-        }
+        // ── Determine accent color from feature ──
+        const accentColor = props['marker-color'] || props['fill'] || props['stroke'] || '#888';
 
-        const popup = new maplibregl.Popup({ closeButton: true, maxWidth: '480px' })
-          .setLngLat(e.lngLat)
-          .setHTML(`
-            ${imgHtml}
-            <div class="popup-header">
-              ${gname ? `<div class="popup-group ${cls}">${gname}</div>` : ''}
-              <div class="popup-title">${title}</div>
-            </div>
-            <div class="popup-inner">
-              ${desc      ? `<div class="popup-desc">${desc}</div>` : ''}
-              ${embedHtml}
-              ${extUrl && !youtubeEmbed(extUrl) && !pdfEmbed(extUrl) ? `<a class="popup-link" href="${extUrl}" target="_blank" rel="noopener noreferrer">↗ Link</a>` : ''}
-            </div>
-          `)
-          .addTo(map);
-
-        window._activePopup = popup;
-        popup.on('close', () => { window._activePopup = null; });
-
-        const closeBtn = popup.getElement()?.querySelector('.maplibregl-popup-close-button');
-        if (closeBtn) {
-          closeBtn.onclick = (ev) => {
-            ev.preventDefault();
-            ev.stopPropagation();
-            const el = popup.getElement();
-            if (el) el.classList.add('is-closing');
-            setTimeout(() => popup.remove(), 180);
-          };
-        }
-
-        setTimeout(() => {
-          const popEl = popup.getElement();
-          if (!popEl) return;
-          const ease    = t => t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
-          const pad     = 16; // min px gap to viewport edge
-          const mapRect = map.getCanvas().getBoundingClientRect();
-          const popRect = popEl.getBoundingClientRect();
-
-          // Translate popup rect into canvas-local coordinates
-          const top    = popRect.top  - mapRect.top;
-          const bottom = popRect.bottom - mapRect.top;
-          const left   = popRect.left - mapRect.left;
-          const right  = popRect.right - mapRect.left;
-
-          // Compute how much we need to pan to bring popup fully into view
-          let dx = 0, dy = 0;
-          if (top    < pad)               dy = top    - pad;
-          if (bottom > mapRect.height - pad) dy = bottom - (mapRect.height - pad);
-          if (left   < pad)               dx = left   - pad;
-          if (right  > mapRect.width  - pad) dx = right  - (mapRect.width  - pad);
-
-          if (dx !== 0 || dy !== 0) {
-            map.panBy([dx, dy], { duration: 450, easing: ease });
-          }
-        }, 60);
+        // ── Render into bottom sheet ──
+        openSheet({
+          imgHtml, gname, cls, title, desc, embedHtml,
+          extUrl, accentColor,
+          youtubeEmbed, pdfEmbed
+        });
       });
 
       // Cursor
@@ -1260,7 +1247,7 @@
       return;
     }
     // Opening: close all other accordions in the same popup
-    const popup = acc.closest('.maplibregl-popup-content');
+    const popup = acc.closest('.popup-inner');
     if (!popup) return;
     popup.querySelectorAll('details.popup-accordion').forEach(other => {
       if (other === acc || !other.open) return;
@@ -1270,6 +1257,66 @@
       other.removeAttribute('open');
     });
   }, true); // capture phase so it fires reliably
+
+  // ── Bottom Sheet ─────────────────────────────────────────────────────
+  function openSheet({ imgHtml, gname, cls, title, desc, embedHtml, extUrl, accentColor, youtubeEmbed, pdfEmbed }) {
+    const sheet   = document.getElementById('bottom-sheet');
+    const overlay = document.getElementById('sheet-overlay');
+    const accent  = document.getElementById('sheet-accent');
+
+    // Stop any playing YT video from previous sheet
+    sheet.querySelectorAll('.yt-frame').forEach(f => { const s = f.src; f.src = ''; f.src = s; });
+
+    // Set accent color
+    accent.style.background = accentColor;
+
+    // Build inner HTML
+    const linkHtml = extUrl && !youtubeEmbed(extUrl) && !pdfEmbed(extUrl)
+      ? `<a class="popup-link" href="${extUrl}" target="_blank" rel="noopener noreferrer">↗ Link</a>`
+      : '';
+
+    sheet.innerHTML = `
+      <div id="sheet-accent" style="position:absolute;left:0;top:0;bottom:0;width:4px;background:${accentColor};z-index:2;"></div>
+      <div id="sheet-handle"></div>
+      ${imgHtml}
+      <div class="popup-header">
+        ${gname ? `<div class="popup-group ${cls}">${gname}</div>` : ''}
+        <div class="popup-title">${title}</div>
+        <button id="sheet-close" onclick="closeSheet()">✕</button>
+      </div>
+      <div class="popup-inner">
+        ${desc      ? `<div class="popup-desc">${desc}</div>` : ''}
+        ${embedHtml}
+        ${linkHtml}
+      </div>`;
+
+    // Show
+    sheet.classList.remove('closing');
+    overlay.classList.remove('closing');
+    sheet.classList.add('visible');
+    overlay.classList.add('visible');
+    overlay.style.pointerEvents = 'auto';
+  }
+
+  function closeSheet() {
+    const sheet   = document.getElementById('bottom-sheet');
+    const overlay = document.getElementById('sheet-overlay');
+    if (!sheet.classList.contains('visible')) return;
+
+    // Stop YT
+    sheet.querySelectorAll('.yt-frame').forEach(f => { f.src = ''; });
+
+    sheet.classList.add('closing');
+    overlay.classList.add('closing');
+    overlay.style.pointerEvents = 'none';
+    setTimeout(() => {
+      sheet.classList.remove('visible', 'closing');
+      overlay.classList.remove('visible', 'closing');
+    }, 240);
+  }
+
+  // Close on overlay click
+  document.getElementById('sheet-overlay')?.addEventListener('click', closeSheet);
 
   // ── Fullscreen ───────────────────────────────────────────────────────
   const FS_ICON_OPEN  = `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`;
