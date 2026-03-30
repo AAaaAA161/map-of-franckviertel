@@ -358,6 +358,30 @@
       height: 420px;
       border: none;
     }
+    .popup-accordion {
+      margin: 8px 0 4px;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .popup-accordion summary {
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      background: rgba(0,0,0,0.04);
+      user-select: none;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #333;
+    }
+    .popup-accordion summary::-webkit-details-marker { display: none; }
+    .popup-accordion summary:hover { background: rgba(0,0,0,0.08); }
+    .popup-accordion[open] summary { border-bottom: 1px solid rgba(0,0,0,0.10); }
+    .popup-accordion .popup-embed,
+    .popup-accordion .popup-pdf { margin: 0; border-radius: 0; border: none; }
     .popup-desc strong       { color: #111111; font-weight: 600; }
     .popup-desc em           { font-style: italic; opacity: 0.8; }
     .popup-desc ul, .popup-desc ol { padding-left: 16px; margin: 4px 0; }
@@ -613,15 +637,29 @@
         const cls    = key === 'housing' ? 'b' : key === 'connections' ? 'c' : 'a';
         const extUrl = props.url || '';
 
-        // ── Embed helpers ──
+        // ── Embed helpers — wrapped in accordions ──
+        let _embedSerial = 0;
         function youtubeEmbed(url) {
           const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
-          return m ? `<div class="popup-embed"><iframe src="https://www.youtube.com/embed/${m[1]}" frameborder="0" allowfullscreen></iframe></div>` : null;
+          if (!m) return null;
+          const id = `yt-acc-${_embedSerial++}`;
+          return `<details class="popup-accordion yt-accordion" id="${id}">
+            <summary>▶ Watch Video</summary>
+            <div class="popup-embed">
+              <iframe class="yt-frame" src="https://www.youtube.com/embed/${m[1]}" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </details>`;
         }
         function pdfEmbed(url) {
-          return /\.pdf(\?|$)/i.test(url)
-            ? `<div class="popup-pdf"><iframe src="${url}" title="PDF"></iframe></div>`
-            : null;
+          if (!/\.pdf(\?|$)/i.test(url)) return null;
+          const pdfSrc = url.includes('#') ? url : url + '#toolbar=0';
+          const id = `pdf-acc-${_embedSerial++}`;
+          return `<details class="popup-accordion pdf-accordion" id="${id}">
+            <summary>📄 View PDF</summary>
+            <div class="popup-pdf">
+              <iframe src="${pdfSrc}" title="PDF"></iframe>
+            </div>
+          </details>`;
         }
         function makeEmbed(url) { return youtubeEmbed(url) || pdfEmbed(url) || null; }
 
@@ -1192,6 +1230,32 @@
       });
     }
   }
+  // ── Accordion: mutual close + YT stop on close ───────────────────────
+  document.addEventListener('toggle', (e) => {
+    const acc = e.target;
+    if (!acc.classList?.contains('popup-accordion')) return;
+    if (!acc.open) {
+      // Closing: if it's a YT accordion, stop the video by clearing src
+      const frame = acc.querySelector('.yt-frame');
+      if (frame) {
+        const src = frame.src;
+        frame.src = '';
+        frame.src = src; // restore so it can be re-opened
+      }
+      return;
+    }
+    // Opening: close all other accordions in the same popup
+    const popup = acc.closest('.maplibregl-popup-content');
+    if (!popup) return;
+    popup.querySelectorAll('details.popup-accordion').forEach(other => {
+      if (other === acc || !other.open) return;
+      // Stop YT if closing
+      const frame = other.querySelector('.yt-frame');
+      if (frame) { const s = frame.src; frame.src = ''; frame.src = s; }
+      other.removeAttribute('open');
+    });
+  }, true); // capture phase so it fires reliably
+
   // ── Fullscreen ───────────────────────────────────────────────────────
   const FS_ICON_OPEN  = `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`;
   const FS_ICON_CLOSE = `<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>`;
