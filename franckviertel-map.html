@@ -233,8 +233,8 @@
       pointer-events: none;
     }
 
-    @keyframes sheetIn  { from { transform: translateY(100%); } to { transform: translateY(0); } }
-    @keyframes sheetOut { from { transform: translateY(0); }    to { transform: translateY(100%); } }
+    @keyframes sheetIn  { from { transform: translateX(-50%) translateY(100%); } to { transform: translateX(-50%) translateY(0); } }
+    @keyframes sheetOut { from { transform: translateX(-50%) translateY(0); }    to { transform: translateX(-50%) translateY(100%); } }
     @keyframes overlayIn  { from { opacity: 0; } to { opacity: 1; } }
     @keyframes overlayOut { from { opacity: 1; } to { opacity: 0; } }
 
@@ -257,26 +257,30 @@
 
     /* ── Bottom Sheet ── */
     #bottom-sheet {
-      display: none;
       position: fixed;
       bottom: 0;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateY(100%);
       width: min(520px, 100vw);
-      max-height: 70vh;
+      max-height: 72vh;
       z-index: 101;
       border-radius: 10px 10px 0 0;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
       box-shadow: 0 -4px 32px rgba(0,0,0,0.22), 0 -1px 6px rgba(0,0,0,0.10);
-      display: flex;
-      flex-direction: column;
+      pointer-events: none;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,0,0,0.15) transparent;
     }
+    #bottom-sheet::-webkit-scrollbar { width: 4px; }
+    #bottom-sheet::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
     #bottom-sheet.visible {
-      display: flex;
+      pointer-events: auto;
       animation: sheetIn 0.32s cubic-bezier(0.22,1,0.36,1) forwards;
     }
     #bottom-sheet.closing {
       animation: sheetOut 0.22s ease-in forwards;
+      pointer-events: none;
     }
 
     /* drag handle */
@@ -304,9 +308,8 @@
     /* ── Sheet header (dark) ── */
     .popup-header {
       background: #1a1a1a;
-      padding: 22px 20px 16px 24px;
+      padding: 14px 20px 16px 48px; /* left space for close button */
       position: relative;
-      flex-shrink: 0;
     }
     .popup-group {
       font-family: var(--mono);
@@ -323,11 +326,10 @@
       font-size: 17px;
       color: #ffffff;
       line-height: 1.3;
-      padding-right: 36px;
     }
     #sheet-close {
       position: absolute;
-      top: 14px; right: 14px;
+      top: 12px; left: 12px;
       width: 28px; height: 28px;
       background: rgba(255,255,255,0.1);
       border: none;
@@ -337,20 +339,15 @@
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: background 0.15s, color 0.15s;
+      flex-shrink: 0;
     }
     #sheet-close:hover { background: rgba(255,255,255,0.2); color: #fff; }
 
-    /* ── Sheet body (light, scrollable) ── */
+    /* ── Sheet body (light) — scrolling happens on #bottom-sheet itself ── */
     .popup-inner {
-      padding: 16px 20px 24px 24px;
+      padding: 16px 20px 32px 24px;
       background: #f2f0ed;
-      overflow-y: auto;
-      flex: 1;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(0,0,0,0.15) transparent;
     }
-    .popup-inner::-webkit-scrollbar { width: 4px; }
-    .popup-inner::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
 
     .popup-desc {
       font-size: 13px;
