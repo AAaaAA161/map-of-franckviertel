@@ -1386,6 +1386,19 @@
   // Close on overlay click
   document.getElementById('sheet-overlay')?.addEventListener('click', closeSheet);
 
+  // Auto-start audio on first user interaction
+  function _autoStartAudio() {
+    if (_audioPlaying) return;
+    _audioPlaying = true;
+    startAmbient();
+    const btn = document.getElementById('audio-btn');
+    if (btn) { btn.classList.add('audio-playing'); btn.title = 'Mute sound'; }
+    document.removeEventListener('click', _autoStartAudio);
+    document.removeEventListener('keydown', _autoStartAudio);
+  }
+  document.addEventListener('click', _autoStartAudio);
+  document.addEventListener('keydown', _autoStartAudio);
+
   // ── Audio Engine ─────────────────────────────────────────────────────
   let _audioPlaying = false;
   let _ambientAudio = null;
