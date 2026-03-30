@@ -694,29 +694,31 @@
 
         // ── Embed helpers — wrapped in accordions ──
         let _embedSerial = 0;
-        function youtubeEmbed(url) {
+        function youtubeEmbed(url, label) {
           const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
           if (!m) return null;
-          const id = `yt-acc-${_embedSerial++}`;
+          const id  = `yt-acc-${_embedSerial++}`;
+          const lbl = label || '🎧 Audio Interview';
           return `<details class="popup-accordion yt-accordion" id="${id}">
-            <summary>🎧 Audio Interview</summary>
+            <summary>${lbl}</summary>
             <div class="popup-embed">
               <iframe class="yt-frame" src="https://www.youtube.com/embed/${m[1]}" frameborder="0" allowfullscreen></iframe>
             </div>
           </details>`;
         }
-        function pdfEmbed(url) {
+        function pdfEmbed(url, label) {
           if (!/\.pdf(\?|$)/i.test(url)) return null;
           const pdfSrc = url.includes('#') ? url : url + '#toolbar=0';
-          const id = `pdf-acc-${_embedSerial++}`;
+          const id  = `pdf-acc-${_embedSerial++}`;
+          const lbl = label || '📄 Written Interview';
           return `<details class="popup-accordion pdf-accordion" id="${id}">
-            <summary>📄 Written Interview</summary>
+            <summary>${lbl}</summary>
             <div class="popup-pdf">
               <iframe src="${pdfSrc}" title="PDF"></iframe>
             </div>
           </details>`;
         }
-        function makeEmbed(url) { return youtubeEmbed(url) || pdfEmbed(url) || null; }
+        function makeEmbed(url, label) { return youtubeEmbed(url, label) || pdfEmbed(url, label) || null; }
 
         // ── Process description ──
         // 1. Before markdown parsing: replace embeddable URLs with placeholders
@@ -725,8 +727,9 @@
         let embedIdx = 0;
         // Match bare URLs and markdown links [text](url)
         rawDesc = rawDesc.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)|(https?:\/\/\S+)/g, (match, mdText, mdUrl, bareUrl) => {
-          const url = mdUrl || bareUrl;
-          const embed = makeEmbed(url);
+          const url   = mdUrl || bareUrl;
+          const label = mdText || null; // use bracket text as accordion label
+          const embed = makeEmbed(url, label);
           if (embed) {
             const key = `%%EMBED_${embedIdx++}%%`;
             embedMap[key] = embed;
