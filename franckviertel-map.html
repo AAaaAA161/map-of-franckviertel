@@ -215,7 +215,7 @@
     #audio-btn {
       position: fixed;
       bottom: 36px;
-      right: 106px;
+      right: 152px;
       z-index: 10;
       display: flex;
       align-items: center;
@@ -1370,108 +1370,64 @@
   document.getElementById('sheet-overlay')?.addEventListener('click', closeSheet);
 
   // ── Audio Engine ─────────────────────────────────────────────────────
-  let _audioCtx = null;
-  let _ambientNodes = [];
   let _audioPlaying = false;
-  let _masterGain = null;
+  let _ambientAudio = null;
+  let _audioCtx     = null;
 
   function getAudioCtx() {
     if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     return _audioCtx;
   }
 
-  // Soft click sound — short sine blip with quick fade
+  // Soft click sound — short sine blip
   function playClickSound(freq = 440, duration = 0.12) {
     if (!_audioPlaying) return;
-    const ctx = getAudioCtx();
-    const osc = ctx.createOscillator();
-    const env = ctx.createGain();
-    osc.connect(env);
-    env.connect(ctx.destination);
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-    env.gain.setValueAtTime(0, ctx.currentTime);
-    env.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.01);
-    env.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + duration + 0.01);
-  }
-
-  // Pad: slow sine with vibrato + reverb-like convolver
-  function createPad(ctx, freq, gainVal) {
-    const osc     = ctx.createOscillator();
-    const vibLfo  = ctx.createOscillator();
-    const vibGain = ctx.createGain();
-    const gain    = ctx.createGain();
-
-    osc.type = 'sine';
-    osc.frequency.value = freq;
-
-    vibLfo.type = 'sine';
-    vibLfo.frequency.value = 0.18 + Math.random() * 0.08;
-    vibGain.gain.value = freq * 0.003;
-
-    vibLfo.connect(vibGain);
-    vibGain.connect(osc.frequency);
-    osc.connect(gain);
-    gain.gain.value = gainVal;
-
-    vibLfo.start();
-    osc.start();
-    return { osc, vibLfo, gain };
+    try {
+      const ctx = getAudioCtx();
+      if (ctx.state === 'suspended') ctx.resume();
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.connect(env);
+      env.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      env.gain.setValueAtTime(0, ctx.currentTime);
+      env.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.01);
+      env.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + duration + 0.01);
+    } catch(e) {}
   }
 
   function startAmbient() {
-    const ctx = getAudioCtx();
-    if (ctx.state === 'suspended') ctx.resume();
-
-    _masterGain = ctx.createGain();
-    _masterGain.gain.setValueAtTime(0, ctx.currentTime);
-    _masterGain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 4);
-    _masterGain.connect(ctx.destination);
-
-    // Slow filter sweep for texture
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(600, ctx.currentTime);
-    filter.frequency.linearRampToValueAtTime(1200, ctx.currentTime + 20);
-    filter.Q.value = 0.8;
-
-    // Chord: Am pentatonic-ish — A2, E3, A3, C4, E4
-    const freqs = [110, 164.81, 220, 261.63, 329.63];
-    const gains = [0.5,  0.35,  0.4,  0.25,   0.2];
-
-    freqs.forEach((f, i) => {
-      const pad = createPad(ctx, f, gains[i]);
-      pad.gain.connect(filter);
-      _ambientNodes.push(pad);
-    });
-
-    filter.connect(_masterGain);
-    _ambientNodes.push({ gain: filter }); // keep ref
-
-    // Slow random volume drift on master
-    function drift() {
-      if (!_audioPlaying) return;
-      const t   = ctx.currentTime;
-      const val = 0.12 + Math.random() * 0.08;
-      _masterGain.gain.linearRampToValueAtTime(val, t + 8 + Math.random() * 6);
-      setTimeout(drift, (8 + Math.random() * 6) * 1000);
+    if (!_ambientAudio) {
+      _ambientAudio = new Audio('mason.mp3');
+      _ambientAudio.loop   = true;
+      _ambientAudio.volume = 0;   // start silent, fade in
     }
-    setTimeout(drift, 6000);
+    _ambientAudio.play().catch(() => {});
+    // Fade in to low volume over 4s
+    let vol = 0;
+    const target = 0.08; // very quiet
+    const step   = target / 80;
+    const fadeIn = setInterval(() => {
+      vol = Math.min(vol + step, target);
+      if (_ambientAudio) _ambientAudio.volume = vol;
+      if (vol >= target) clearInterval(fadeIn);
+    }, 50);
   }
 
   function stopAmbient() {
-    if (!_masterGain) return;
-    const ctx = getAudioCtx();
-    _masterGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 2.5);
-    setTimeout(() => {
-      _ambientNodes.forEach(n => {
-        try { n.osc?.stop(); n.vibLfo?.stop(); } catch(e) {}
-      });
-      _ambientNodes = [];
-      _masterGain = null;
-    }, 3000);
+    if (!_ambientAudio) return;
+    // Fade out over 2s
+    const fadeOut = setInterval(() => {
+      if (!_ambientAudio) { clearInterval(fadeOut); return; }
+      _ambientAudio.volume = Math.max(_ambientAudio.volume - 0.004, 0);
+      if (_ambientAudio.volume <= 0) {
+        _ambientAudio.pause();
+        clearInterval(fadeOut);
+      }
+    }, 50);
   }
 
   function toggleAudio() {
