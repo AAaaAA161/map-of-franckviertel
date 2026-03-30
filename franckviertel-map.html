@@ -297,17 +297,17 @@
       pointer-events: none;
     }
 
-    /* accent strip — full height left edge, set via CSS var */
-    #bottom-sheet::before {
-      content: '';
+    /* accent strip — separate fixed element, height set via JS */
+    #sheet-accent-bar {
       position: fixed;
       left: calc(50% - min(520px, 100vw) / 2);
-      top: 0;
       bottom: 0;
       width: 4px;
-      background: var(--sheet-accent, #888);
-      z-index: 102;
+      height: 0;
+      z-index: 103;
       pointer-events: none;
+      transition: height 0.32s cubic-bezier(0.22,1,0.36,1);
+      border-radius: 0 0 0 10px;
     }
 
     /* ── Sheet header (dark) ── */
@@ -449,6 +449,7 @@
 <div id="status">Lade Kartendaten …</div>
 <div id="map"></div>
 <div id="sheet-overlay"></div>
+<div id="sheet-accent-bar"></div>
 <div id="bottom-sheet">
   <div id="sheet-accent"></div>
   <div id="sheet-handle"></div>
@@ -1267,8 +1268,16 @@
     // Stop any playing YT video from previous sheet
     sheet.querySelectorAll('.yt-frame').forEach(f => { const s = f.src; f.src = ''; f.src = s; });
 
-    // Set accent color via CSS variable
-    sheet.style.setProperty('--sheet-accent', accentColor);
+    // Set accent bar color — height updated after animation
+    const bar = document.getElementById('sheet-accent-bar');
+    if (bar) {
+      bar.style.background = accentColor;
+      bar.style.height = '0';
+      // After sheet animates in, match its rendered height
+      setTimeout(() => {
+        bar.style.height = sheet.offsetHeight + 'px';
+      }, 340);
+    }
 
     // Build inner HTML
     const linkHtml = extUrl && !youtubeEmbed(extUrl) && !pdfEmbed(extUrl)
@@ -1305,6 +1314,9 @@
 
     // Stop YT
     sheet.querySelectorAll('.yt-frame').forEach(f => { f.src = ''; });
+    // Hide accent bar
+    const bar = document.getElementById('sheet-accent-bar');
+    if (bar) bar.style.height = '0';
 
     sheet.classList.add('closing');
     overlay.classList.add('closing');
