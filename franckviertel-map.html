@@ -297,18 +297,23 @@
       pointer-events: none;
     }
 
-    /* accent strip — left edge, color set via JS */
-    #sheet-accent {
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
+    /* accent strip — full height left edge, set via CSS var */
+    #bottom-sheet::before {
+      content: '';
+      position: fixed;
+      left: calc(50% - min(520px, 100vw) / 2);
+      top: 0;
+      bottom: 0;
       width: 4px;
-      z-index: 2;
+      background: var(--sheet-accent, #888);
+      z-index: 102;
+      pointer-events: none;
     }
 
     /* ── Sheet header (dark) ── */
     .popup-header {
       background: #1a1a1a;
-      padding: 14px 20px 16px 48px; /* left space for close button */
+      padding: 14px 48px 16px 20px; /* right space for close button */
       position: relative;
     }
     .popup-group {
@@ -329,7 +334,7 @@
     }
     #sheet-close {
       position: absolute;
-      top: 12px; left: 12px;
+      top: 12px; right: 12px;
       width: 28px; height: 28px;
       background: rgba(255,255,255,0.1);
       border: none;
@@ -1259,13 +1264,11 @@
   function openSheet({ imgHtml, gname, cls, title, desc, embedHtml, extUrl, accentColor, youtubeEmbed, pdfEmbed }) {
     const sheet   = document.getElementById('bottom-sheet');
     const overlay = document.getElementById('sheet-overlay');
-    const accent  = document.getElementById('sheet-accent');
-
     // Stop any playing YT video from previous sheet
     sheet.querySelectorAll('.yt-frame').forEach(f => { const s = f.src; f.src = ''; f.src = s; });
 
-    // Set accent color
-    accent.style.background = accentColor;
+    // Set accent color via CSS variable
+    sheet.style.setProperty('--sheet-accent', accentColor);
 
     // Build inner HTML
     const linkHtml = extUrl && !youtubeEmbed(extUrl) && !pdfEmbed(extUrl)
@@ -1273,7 +1276,6 @@
       : '';
 
     sheet.innerHTML = `
-      <div id="sheet-accent" style="position:absolute;left:0;top:0;bottom:0;width:4px;background:${accentColor};z-index:2;"></div>
       <div id="sheet-handle"></div>
       ${imgHtml}
       <div class="popup-header">
@@ -1287,7 +1289,8 @@
         ${linkHtml}
       </div>`;
 
-    // Show
+    // Reset scroll + show
+    sheet.scrollTop = 0;
     sheet.classList.remove('closing');
     overlay.classList.remove('closing');
     sheet.classList.add('visible');
