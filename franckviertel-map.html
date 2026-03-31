@@ -757,10 +757,7 @@
           if (!/\.pdf(\?|$)/i.test(url)) return null;
           // raw.githubusercontent.com serves with Content-Disposition: attachment
           // — route through Google Docs viewer for inline rendering
-          const isRaw = url.includes('raw.githubusercontent.com') || url.includes('raw.github.com');
-          const pdfSrc = isRaw
-            ? `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`
-            : (url.includes('#') ? url : url + '#toolbar=0');
+          const pdfSrc = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(url)}`;
           const id  = `pdf-acc-${_embedSerial++}`;
           const lbl = label || '📄 Written Interview';
           return `<details class="popup-accordion pdf-accordion" id="${id}">
