@@ -816,35 +816,19 @@
         const cls    = key === 'housing' ? 'b' : key === 'connections' ? 'c' : 'a';
         const extUrl = props.url || '';
 
-        // ── Embed helpers — wrapped in accordions ──
-        let _embedSerial = 0;
+        // ── Embed helpers — open in modal ──
         function youtubeEmbed(url, label) {
           const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
           if (!m) return null;
-          const id  = `yt-acc-${_embedSerial++}`;
-          const lbl = label || '🎧 Audio Interview';
-          return `<details class="popup-accordion yt-accordion" id="${id}">
-            <summary>${lbl}</summary>
-            <div class="popup-embed">
-              <iframe class="yt-frame" src="https://www.youtube.com/embed/${m[1]}?modestbranding=1&rel=0&iv_load_policy=3&fs=0" frameborder="0"></iframe>
-              <div class="yt-overlay"></div>
-              <div class="yt-overlay yt-overlay-bottom"></div>
-            </div>
-          </details>`;
+          const lbl      = label || '🎧 Audio Interview';
+          const embedUrl = `https://www.youtube.com/embed/${m[1]}?modestbranding=1&rel=0&iv_load_policy=3&fs=0&autoplay=1`;
+          return `<button class="media-open-btn" onclick="openMediaModal('${embedUrl}')">${lbl}</button>`;
         }
         function pdfEmbed(url, label) {
           if (!/\.pdf(\?|$)/i.test(url)) return null;
-          // raw.githubusercontent.com serves with Content-Disposition: attachment
-          // — route through Google Docs viewer for inline rendering
-          const pdfSrc = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(url)}`;
-          const id  = `pdf-acc-${_embedSerial++}`;
-          const lbl = label || '📄 Written Interview';
-          return `<details class="popup-accordion pdf-accordion" id="${id}">
-            <summary>${lbl}</summary>
-            <div class="popup-pdf">
-              <iframe src="${pdfSrc}" title="PDF"></iframe>
-            </div>
-          </details>`;
+          const lbl     = label || '📄 Written Interview';
+          const viewUrl = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(url)}`;
+          return `<button class="media-open-btn" onclick="openMediaModal('${viewUrl}')">${lbl}</button>`;
         }
         function makeEmbed(url, label) { return youtubeEmbed(url, label) || pdfEmbed(url, label) || null; }
 
