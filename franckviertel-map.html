@@ -755,7 +755,12 @@
         }
         function pdfEmbed(url, label) {
           if (!/\.pdf(\?|$)/i.test(url)) return null;
-          const pdfSrc = url.includes('#') ? url : url + '#toolbar=0';
+          // raw.githubusercontent.com serves with Content-Disposition: attachment
+          // — route through Google Docs viewer for inline rendering
+          const isRaw = url.includes('raw.githubusercontent.com') || url.includes('raw.github.com');
+          const pdfSrc = isRaw
+            ? `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`
+            : (url.includes('#') ? url : url + '#toolbar=0');
           const id  = `pdf-acc-${_embedSerial++}`;
           const lbl = label || '📄 Written Interview';
           return `<details class="popup-accordion pdf-accordion" id="${id}">
