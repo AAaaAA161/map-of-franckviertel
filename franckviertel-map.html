@@ -332,6 +332,79 @@
       border-radius: 0 0 0 10px;
     }
 
+    /* ── Media Modal ── */
+    #media-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+    #media-modal-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #media-modal {
+      position: relative;
+      width: min(860px, 92vw);
+      height: min(600px, 85vh);
+      background: #1a1a1a;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      transform: scale(0.96);
+      transition: transform 0.22s cubic-bezier(0.22,1,0.36,1);
+    }
+    #media-modal-overlay.visible #media-modal {
+      transform: scale(1);
+    }
+    #media-modal iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    #media-modal-close {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 30px; height: 30px;
+      background: rgba(255,255,255,0.12);
+      border: none;
+      border-radius: 50%;
+      color: rgba(255,255,255,0.8);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2;
+      transition: background 0.15s;
+    }
+    #media-modal-close:hover { background: rgba(255,255,255,0.22); color: #fff; }
+
+    /* ── Media open buttons (replace accordions) ── */
+    .media-open-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0 2px;
+      padding: 9px 14px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #1a1a1a;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .media-open-btn:hover { background: #f7f6f4; }
+
     /* ── Sheet header (dark) ── */
     .popup-header {
       background: #1a1a1a;
@@ -487,6 +560,12 @@
 <div id="map"></div>
 <div id="sheet-overlay"></div>
 <div id="sheet-accent-bar"></div>
+<div id="media-modal-overlay">
+  <div id="media-modal">
+    <button id="media-modal-close" onclick="closeMediaModal()">✕</button>
+    <iframe id="media-modal-frame" src="" allowfullscreen></iframe>
+  </div>
+</div>
 <div id="bottom-sheet">
   <div id="sheet-accent"></div>
   <div id="sheet-handle"></div>
@@ -1288,32 +1367,7 @@
       });
     }
   }
-  // ── Accordion: mutual close + YT stop on close ───────────────────────
-  document.addEventListener('toggle', (e) => {
-    const acc = e.target;
-    if (!acc.classList?.contains('popup-accordion')) return;
-    playClickSound(acc.open ? 520 : 380, 0.09);
-    if (!acc.open) {
-      // Closing: if it's a YT accordion, stop the video by clearing src
-      const frame = acc.querySelector('.yt-frame');
-      if (frame) {
-        const src = frame.src;
-        frame.src = '';
-        frame.src = src; // restore so it can be re-opened
-      }
-      return;
-    }
-    // Opening: close all other accordions in the same popup
-    const popup = acc.closest('.popup-inner');
-    if (!popup) return;
-    popup.querySelectorAll('details.popup-accordion').forEach(other => {
-      if (other === acc || !other.open) return;
-      // Stop YT if closing
-      const frame = other.querySelector('.yt-frame');
-      if (frame) { const s = frame.src; frame.src = ''; frame.src = s; }
-      other.removeAttribute('open');
-    });
-  }, true); // capture phase so it fires reliably
+  // Accordion toggle listener removed — media opens in modal
 
   // ── Bottom Sheet ─────────────────────────────────────────────────────
   function openSheet({ imgHtml, gname, cls, title, desc, embedHtml, extUrl, accentColor, youtubeEmbed, pdfEmbed }) {
@@ -1370,8 +1424,8 @@
 
     // Click sound — close (lower pitch)
     playClickSound(330, 0.10);
-    // Stop YT
-    sheet.querySelectorAll('.yt-frame').forEach(f => { f.src = ''; });
+    // Close media modal if open
+    closeMediaModal();
     // Hide accent bar
     const bar = document.getElementById('sheet-accent-bar');
     if (bar) bar.style.height = '0';
@@ -1532,6 +1586,32 @@
       btn.title = 'Ambient sound';
     }
   }
+
+  // ── Media Modal ──────────────────────────────────────────────────────
+  function openMediaModal(src) {
+    const overlay = document.getElementById('media-modal-overlay');
+    const frame   = document.getElementById('media-modal-frame');
+    frame.src = src;
+    overlay.classList.add('visible');
+  }
+
+  function closeMediaModal() {
+    const overlay = document.getElementById('media-modal-overlay');
+    const frame   = document.getElementById('media-modal-frame');
+    overlay.classList.remove('visible');
+    // Stop video/PDF
+    setTimeout(() => { frame.src = ''; }, 220);
+  }
+
+  // Close on backdrop click
+  document.getElementById('media-modal-overlay').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('media-modal-overlay')) closeMediaModal();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMediaModal();
+  });
 
   // ── Fullscreen ───────────────────────────────────────────────────────
   const FS_ICON_OPEN  = `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`;
