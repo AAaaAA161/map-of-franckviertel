@@ -3006,6 +3006,29 @@
           "hide_text": true,
           "title": "New item"
         }
+      },
+      {
+        "type": "Feature",
+        "id": 4078501836,
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            14.313254,
+            48.296154
+          ]
+        },
+        "properties": {
+          "image": {
+            "id": "t192xfy7eogisrw7",
+            "w": 1600,
+            "h": 1200,
+            "tip_color": "#9b9087",
+            "avg_color": "#768a9f"
+          },
+          "marker-symbol": "camera",
+          "hide_text": true,
+          "title": "New item"
+        }
       }
     ],
     "groups": [
@@ -3184,7 +3207,7 @@
   "viewer_users": [],
   "editor_users": [],
   "created_date": "2026-01-22T09:32:16",
-  "modified_date": "2026-04-23T17:35:48",
+  "modified_date": "2026-04-23T17:42:16",
   "images": [
     "40pxhpfg9xjxrxxy",
     "5iwmwuehn1ho83zn",
@@ -3202,6 +3225,7 @@
     "nddz7rpchfr7ryh7",
     "qq6q7tcackmupvqd",
     "s5kkq7lubsv8atfa",
+    "t192xfy7eogisrw7",
     "uo3dzj8avr5yxoso",
     "vafd0gwrlbzrj1p3",
     "wybdzs8c6kf9fj8x",
