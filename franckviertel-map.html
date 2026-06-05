@@ -421,6 +421,7 @@
     .popup-group.a { color: #7eba3a; }
     .popup-group.b { color: #5ba3e8; }
     .popup-group.c { color: #e8b85b; }
+    .popup-group.d { color: #2563eb; }
     .popup-title {
       font-weight: 500;
       font-size: 17px;
@@ -619,6 +620,7 @@
     { key: 'curtransform',    label: 'Current Transformation', parent: null,           match: tl => tl.includes('current transformation') },
     { key: 'construction',    label: 'Construction sites',     parent: 'curtransform', match: tl => tl.includes('current transformation') && tl.includes('construction') },
     { key: 'new2023',         label: 'New (since 2023)',       parent: 'curtransform', match: tl => tl.includes('current transformation') && tl.includes('new') },
+    { key: 'photos',          label: 'Photos',                 parent: null,           match: tl => tl === 'photos', pinColor: '#2563eb', pinSymbol: 'camera' },
   ];
 
   // For matching, sort children before parents (more specific first)
@@ -714,6 +716,15 @@
         else buckets['other'].push(f);
       });
 
+      // Force pin color/symbol for layers that define them
+      LAYERS.forEach(l => {
+        if (l.pinColor || l.pinSymbol) {
+          (buckets[l.key] || []).forEach(f => {
+            if (l.pinColor)  f.properties['marker-color']  = l.pinColor;
+            if (l.pinSymbol) f.properties['marker-symbol'] = l.pinSymbol;
+          });
+        }
+      });
 
       const pinPairs = new Set();
       data.features.forEach(f => {
@@ -809,7 +820,7 @@
         const props = f.properties;
         const title  = props.title || '—';
         const gname  = groupTitles[props.group] || '';
-        const cls    = key === 'housing' ? 'b' : key === 'connections' ? 'c' : 'a';
+        const cls    = key === 'housing' ? 'b' : key === 'connections' ? 'c' : key === 'photos' ? 'd' : 'a';
         const extUrl = props.url || '';
 
         // ── Embed helpers — open in modal ──
@@ -936,7 +947,8 @@
     'toilets':       `<path d="M3 1.5a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0ZM11.5 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM3.29 4a1 1 0 0 0-.868.504L.566 7.752a.5.5 0 1 0 .868.496l1.412-2.472A345.048 345.048 0 0 0 1 11h2v2.5a.5.5 0 0 0 1 0V11h1v2.5a.5.5 0 0 0 1 0V11h2L6.103 5.687l1.463 2.561a.5.5 0 1 0 .868-.496L6.578 4.504A1 1 0 0 0 5.71 4H3.29ZM9 4.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v4a.5.5 0 0 1-1 0v-4h-1v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 1-1 0v-5Z"/>`,
     'building_small':`<path d="M3,2v11h5v-3h3v3h1V2H3z M7,12H4v-2h3V12z M7,9H4V7h3V9z M7,6H4V4h3V6z M11,9H8V7h3V9z M11,6H8V4h3V6z"/>`,
     'circle':        `<circle cx="7.5" cy="7.5" r="4"/>`,
-    'industry':      `<path d="M1,14V6l4-2v2l4-4v4l4-2v8H1z M3,9H2v2h1V9z M6,9H5v2h1V9z M9,9H8v2h1V9z M12,9h-1v2h1V9z M4,12H2v2h2V12z M9,12H6v2h3V12z M13,12h-2v2h2V12z"/>`
+    'industry':      `<path d="M1,14V6l4-2v2l4-4v4l4-2v8H1z M3,9H2v2h1V9z M6,9H5v2h1V9z M9,9H8v2h1V9z M12,9h-1v2h1V9z M4,12H2v2h2V12z M9,12H6v2h3V12z M13,12h-2v2h2V12z"/>`,
+    'camera':        `<path d="M5,2L3,4.5H1C0.45,4.5,0,4.95,0,5.5V13c0,0.55,0.45,1,1,1h13c0.55,0,1-0.45,1-1V5.5c0-0.55-0.45-1-1-1h-2L10,2H5z M7.5,6C9.43,6,11,7.57,11,9.5S9.43,13,7.5,13S4,11.43,4,9.5S5.57,6,7.5,6z M7.5,7.5C6.4,7.5,5.5,8.4,5.5,9.5S6.4,11.5,7.5,11.5S9.5,10.6,9.5,9.5S8.6,7.5,7.5,7.5z"/>`
   };
   MAKI_ICONS['building-small'] = MAKI_ICONS['building_small'];
 
