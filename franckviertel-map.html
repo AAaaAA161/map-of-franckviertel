@@ -619,14 +619,12 @@
     { key: 'curtransform',    label: 'Current Transformation', parent: null,           match: tl => tl.includes('current transformation') },
     { key: 'construction',    label: 'Construction sites',     parent: 'curtransform', match: tl => tl.includes('current transformation') && tl.includes('construction') },
     { key: 'new2023',         label: 'New (since 2023)',       parent: 'curtransform', match: tl => tl.includes('current transformation') && tl.includes('new') },
-    { key: 'history',         label: 'History',                parent: null,           match: tl => tl.includes('history'), defaultOff: true, exclusive: true },
   ];
 
   // For matching, sort children before parents (more specific first)
   const LAYERS_MATCH_ORDER = [...LAYERS].sort((a, b) => (b.parent ? 1 : 0) - (a.parent ? 1 : 0));
 
-  // History starts hidden; all others start visible
-  const state = Object.fromEntries(LAYERS.map(l => [l.key, !l.defaultOff]));
+  const state = Object.fromEntries(LAYERS.map(l => [l.key, true]));
 
   function resolveTitle(t) {
     if (!t) return '';
@@ -779,11 +777,9 @@
       // Store data globally for re-applying after style swaps
       window._mapData = { buckets, groupTitles };
 
-      // Apply initial visibility states (e.g. History starts hidden)
-      LAYERS.filter(l => l.defaultOff).forEach(l => {
-        setLayerVisible(l.key, false);
-        const btn = document.getElementById(`btn-${l.key}`);
-        if (btn) btn.classList.add('off');
+      // Apply initial visibility states
+      LAYERS.forEach(l => {
+        setLayerVisible(l.key, state[l.key]);
       });
 
       // Single click handler using queryRenderedFeatures so pins always win over polygons
@@ -1105,25 +1101,6 @@
     const layer   = LAYERS.find(l => l.key === key);
     const turning = !state[key]; // what we're switching TO
 
-    if (layer?.exclusive) {
-      // Exclusive layer (History): turning on hides all non-exclusive layers
-      if (turning) {
-        LAYERS.filter(l => !l.exclusive && !l.parent).forEach(l => {
-          setLayerAndChildren(l.key, false, false); // force-hide without changing their state
-        });
-      } else {
-        // Turning off: restore all non-exclusive layers to their own state
-        LAYERS.filter(l => !l.exclusive && !l.parent).forEach(l => {
-          setLayerAndChildren(l.key, state[l.key]);
-        });
-      }
-    } else {
-      // Normal layer: if History is on, turn it off
-      if (state['history'] && turning) {
-        setLayerAndChildren('history', false, true);
-      }
-    }
-
     setLayerAndChildren(key, turning);
   }
 
@@ -1163,8 +1140,8 @@
       btn.innerHTML = `<span class="dot" style="background:${color};box-shadow:0 0 6px ${color}"></span>${layer.label}`;
       row.appendChild(btn);
 
-      // Solo button only for top-level parents (not children, not exclusive)
-      if (!layer.parent && !layer.exclusive) {
+      // Solo button only for top-level parents (not children)
+      if (!layer.parent) {
         const solo = document.createElement('button');
         solo.className = 'solo-btn';
         solo.id = `solo-${layer.key}`;
@@ -1190,8 +1167,8 @@
       controls.classList.remove('solo-active');
       document.querySelectorAll('.btn-row').forEach(r => r.classList.remove('solo-active-row'));
       document.querySelectorAll('.solo-btn').forEach(b => b.classList.remove('active'));
-      // Restore visibility for all non-exclusive top-level parents + children
-      LAYERS.filter(l => !l.exclusive).forEach(l => {
+      // Restore visibility for all layers
+      LAYERS.forEach(l => {
         setLayerVisible(l.key, state[l.key]);
         const btn = document.getElementById(`btn-${l.key}`);
         if (btn) { btn.classList.toggle('off', !state[l.key]); btn.classList.remove('disabled'); }
@@ -1201,7 +1178,7 @@
       soloKey = key;
       controls.classList.add('solo-active');
 
-      LAYERS.filter(l => !l.exclusive).forEach(l => {
+      LAYERS.forEach(l => {
         const isTarget   = l.key === key;
         const isChild    = l.parent === key;
         const show       = isTarget || isChild;
