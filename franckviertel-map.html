@@ -133,24 +133,45 @@
 
     .sep { display: none; }
 
-    .solo-btn {
-      display: none;
+    .eye-btn {
+      display: flex;
       align-items: center;
       justify-content: center;
-      margin-left: 8px;
+      width: 30px;
+      height: 30px;
+      margin-right: 4px;
       padding: 0;
+      flex-shrink: 0;
       background: none;
       border: none;
       cursor: pointer;
       color: var(--text);
-      opacity: 0.3;
+      opacity: 0.55;
+      transition: opacity 0.15s;
+    }
+    .eye-btn:active { opacity: 1; }
+    .eye-btn svg { pointer-events: none; }
+    .eye-btn .eye-off { display: none; }
+    .eye-btn.off { opacity: 0.3; }
+    .eye-btn.off .eye-on  { display: none; }
+    .eye-btn.off .eye-off { display: block; }
+
+    .solo-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 8px;
+      padding: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      opacity: 0.25;
       transition: opacity 0.15s;
       flex-shrink: 0;
     }
-    .btn-row:hover .solo-btn { display: flex; }
-    .solo-btn:hover { opacity: 0.9; }
+    .solo-btn:active { opacity: 0.9; }
     .solo-btn.active {
-      display: flex;
       opacity: 1;
       color: #fff;
     }
@@ -1134,21 +1155,25 @@
     if (changeState) state[key] = visible;
     setLayerVisible(key, visible);
     const btn = document.getElementById(`btn-${key}`);
+    const eye = document.getElementById(`eye-${key}`);
     if (btn) {
       btn.classList.toggle('off', !visible);
       if (!visible && !changeState) btn.classList.add('disabled');
       else btn.classList.remove('disabled');
     }
+    if (eye) eye.classList.toggle('off', !visible);
     // Propagate to children
     LAYERS.filter(l => l.parent === key).forEach(child => {
       const show = visible ? state[child.key] : false;
       setLayerVisible(child.key, show);
-      const cb = document.getElementById(`btn-${child.key}`);
+      const cb  = document.getElementById(`btn-${child.key}`);
+      const ce  = document.getElementById(`eye-${child.key}`);
       if (cb) {
         cb.classList.toggle('off', !show);
         if (!visible) cb.classList.add('disabled');
         else cb.classList.remove('disabled');
       }
+      if (ce) ce.classList.toggle('off', !show);
     });
   }
 
@@ -1189,6 +1214,20 @@
       const p     = colorSource?.properties || {};
       const color = p['marker-color'] || p['fill'] || p['stroke'] || '#888888';
 
+      const eye = document.createElement('button');
+      eye.className = 'eye-btn';
+      eye.id = `eye-${layer.key}`;
+      eye.title = 'Show / hide';
+      eye.onclick = () => toggleLayer(layer.key);
+      eye.innerHTML = `
+        <svg class="eye-on" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+        <svg class="eye-off" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>
+        </svg>`;
+      row.appendChild(eye);
+
       const btn = document.createElement('button');
       btn.className = 'layer-btn';
       btn.id = `btn-${layer.key}`;
@@ -1227,7 +1266,9 @@
       LAYERS.forEach(l => {
         setLayerVisible(l.key, state[l.key]);
         const btn = document.getElementById(`btn-${l.key}`);
+        const eye = document.getElementById(`eye-${l.key}`);
         if (btn) { btn.classList.toggle('off', !state[l.key]); btn.classList.remove('disabled'); }
+        if (eye) { eye.classList.toggle('off', !state[l.key]); eye.classList.remove('disabled'); }
       });
     } else {
       // Enter solo mode for this key
@@ -1241,9 +1282,14 @@
 
         setLayerVisible(l.key, show ? state[l.key] : false);
         const btn = document.getElementById(`btn-${l.key}`);
+        const eye = document.getElementById(`eye-${l.key}`);
         if (btn) {
           btn.classList.toggle('off', show ? !state[l.key] : true);
           btn.classList.toggle('disabled', !show);
+        }
+        if (eye) {
+          eye.classList.toggle('off', show ? !state[l.key] : true);
+          eye.classList.toggle('disabled', !show);
         }
         const row = document.getElementById(`row-${l.key}`);
         if (row) row.classList.toggle('solo-active-row', show);
