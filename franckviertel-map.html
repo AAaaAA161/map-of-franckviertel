@@ -87,7 +87,7 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-radius: 2px;
-      padding: 6px 14px 6px 10px;
+      padding: 3px 6px 3px 10px;
     }
 
     /* Indented sub-row gets left margin to signal hierarchy */
@@ -139,7 +139,7 @@
       justify-content: center;
       width: 30px;
       height: 30px;
-      margin-right: 4px;
+      margin-left: 6px;
       padding: 0;
       flex-shrink: 0;
       background: none;
@@ -1214,6 +1214,13 @@
       const p     = colorSource?.properties || {};
       const color = p['marker-color'] || p['fill'] || p['stroke'] || '#888888';
 
+      const btn = document.createElement('button');
+      btn.className = 'layer-btn';
+      btn.id = `btn-${layer.key}`;
+      btn.onclick = () => toggleLayer(layer.key);
+      btn.innerHTML = `<span class="dot" style="background:${color};box-shadow:0 0 6px ${color}"></span>${layer.label}`;
+      row.appendChild(btn);
+
       const eye = document.createElement('button');
       eye.className = 'eye-btn';
       eye.id = `eye-${layer.key}`;
@@ -1227,13 +1234,6 @@
           <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>
         </svg>`;
       row.appendChild(eye);
-
-      const btn = document.createElement('button');
-      btn.className = 'layer-btn';
-      btn.id = `btn-${layer.key}`;
-      btn.onclick = () => toggleLayer(layer.key);
-      btn.innerHTML = `<span class="dot" style="background:${color};box-shadow:0 0 6px ${color}"></span>${layer.label}`;
-      row.appendChild(btn);
 
       // Solo button only for top-level parents (not children)
       if (!layer.parent) {
