@@ -100,6 +100,7 @@
       display: flex;
       align-items: center;
       gap: 9px;
+      flex: 1;
       background: none;
       border: none;
       cursor: pointer;
@@ -137,9 +138,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 30px;
-      height: 30px;
-      margin-left: 6px;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      margin-left: 4px;
       padding: 0;
       flex-shrink: 0;
       background: none;
@@ -160,8 +162,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-left: 8px;
-      padding: 4px;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      margin-left: 4px;
+      padding: 0;
       background: none;
       border: none;
       cursor: pointer;
@@ -1235,7 +1240,7 @@
         </svg>`;
       row.appendChild(eye);
 
-      // Solo button only for top-level parents (not children)
+      // Solo button for top-level parents; placeholder spacer for children to keep columns aligned
       if (!layer.parent) {
         const solo = document.createElement('button');
         solo.className = 'solo-btn';
@@ -1248,6 +1253,10 @@
         </svg>`;
         solo.onclick = (e) => { e.stopPropagation(); toggleSolo(layer.key); };
         row.appendChild(solo);
+      } else {
+        const spacer = document.createElement('div');
+        spacer.style.cssText = 'width:28px;height:28px;flex-shrink:0;margin-left:4px;';
+        row.appendChild(spacer);
       }
 
       controls.appendChild(row);
