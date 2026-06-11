@@ -658,7 +658,7 @@
     { key: 'curtransform',    label: 'Current Transformation', parent: null,           match: tl => tl.includes('current transformation') },
     { key: 'construction',    label: 'Construction sites',     parent: 'curtransform', match: tl => tl.includes('current transformation') && tl.includes('construction') },
     { key: 'new2023',         label: 'New (since 2023)',       parent: 'curtransform', match: tl => tl.includes('current transformation') && tl.includes('new') },
-    { key: 'photos',          label: 'Photos',                 parent: null,           match: tl => tl === 'photos', pinColor: '#2563eb', pinSymbol: 'camera' },
+    { key: 'photos',          label: 'Photos',                 parent: null,           match: tl => tl === 'photos', pinColor: '#2563eb', pinSymbol: 'camera', pinOpacity: 0.45, renderBehind: true },
   ];
 
   // For matching, sort children before parents (more specific first)
@@ -815,9 +815,15 @@
         addPolygonLineLayers(key, src);
       });
 
-      renderKeys.forEach(key => {
+      // renderBehind layers are added first so they render below all other pins
+      const pointRenderKeys = [
+        ...renderKeys.filter(k => LAYERS.find(l => l.key === k)?.renderBehind),
+        ...renderKeys.filter(k => !LAYERS.find(l => l.key === k)?.renderBehind),
+      ];
+      pointRenderKeys.forEach(key => {
         if (!buckets[key]?.length) return;
-        addPointLayer(key, `src-${key}`);
+        const opacity = LAYERS.find(l => l.key === key)?.pinOpacity ?? 0.95;
+        addPointLayer(key, `src-${key}`, opacity);
       });
 
       // Build UI buttons now that we know which buckets have data
@@ -1065,7 +1071,7 @@
     });
   }
 
-  function addPointLayer(key, src) {
+  function addPointLayer(key, src, opacity = 0.95) {
     map.addLayer({
       id: `${key}-pt`, type: 'symbol', source: src,
       filter: ['==', ['geometry-type'], 'Point'],
@@ -1079,7 +1085,7 @@
         'icon-anchor': 'bottom',
       },
       paint: {
-        'icon-opacity':            0.95,
+        'icon-opacity':            opacity,
         'icon-opacity-transition': { duration: 350, delay: 0 },
       }
     });
@@ -1094,7 +1100,7 @@
     layerOrigOpacity[key] = {
       [`${key}-pl`]: { prop: 'fill-opacity', val: opacityExpr('fill-opacity', 0.5) },
       [`${key}-ln`]: { prop: 'line-opacity', val: opacityExpr('stroke-opacity', 0.9) },
-      [`${key}-pt`]: { prop: 'icon-opacity', val: 0.95 },
+      [`${key}-pt`]: { prop: 'icon-opacity', val: LAYERS.find(l => l.key === key)?.pinOpacity ?? 0.95 },
     };
   }
 
@@ -1330,9 +1336,14 @@
       try { addPolygonLineLayers(key, src); }
       catch(e) { console.warn('addPolygonLineLayers failed', key, e.message); }
     });
-    renderKeys.forEach(key => {
+    const pointRenderKeys = [
+      ...renderKeys.filter(k => LAYERS.find(l => l.key === k)?.renderBehind),
+      ...renderKeys.filter(k => !LAYERS.find(l => l.key === k)?.renderBehind),
+    ];
+    pointRenderKeys.forEach(key => {
       if (!buckets[key]?.length) return;
-      try { addPointLayer(key, `src-${key}`); }
+      const opacity = LAYERS.find(l => l.key === key)?.pinOpacity ?? 0.95;
+      try { addPointLayer(key, `src-${key}`, opacity); }
       catch(e) { console.warn('addPointLayer failed', key, e.message); }
     });
 
