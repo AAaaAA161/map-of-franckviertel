@@ -1533,8 +1533,9 @@
     document.removeEventListener('click', _autoStartAudio);
     document.removeEventListener('keydown', _autoStartAudio);
   }
-  document.addEventListener('click', _autoStartAudio);
-  document.addEventListener('keydown', _autoStartAudio);
+  document.addEventListener('click',      _autoStartAudio);
+  document.addEventListener('touchstart', _autoStartAudio, { passive: true });
+  document.addEventListener('keydown',    _autoStartAudio);
 
   // ── Audio Engine ─────────────────────────────────────────────────────
   let _audioPlaying = false;
@@ -1578,6 +1579,8 @@
     const a = new Audio('mason.mp3');
     a.volume = 0;
     a.preload = 'auto';
+    a.setAttribute('playsinline', '');
+    a.setAttribute('webkit-playsinline', '');
     return a;
   }
 
@@ -1698,19 +1701,34 @@
   const FS_ICON_OPEN  = `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`;
   const FS_ICON_CLOSE = `<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>`;
 
+  // Hide fullscreen button on iOS Safari (API not supported)
+  (function() {
+    const el = document.documentElement;
+    if (!el.requestFullscreen && !el.webkitRequestFullscreen) {
+      const btn = document.getElementById('fullscreen-btn');
+      if (btn) btn.style.display = 'none';
+    }
+  })();
+
   function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
+    const el  = document.documentElement;
+    const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+    if (!isFs) {
+      if (el.requestFullscreen)       el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
     } else {
-      document.exitFullscreen();
+      if (document.exitFullscreen)         document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
     }
   }
 
-  document.addEventListener('fullscreenchange', () => {
+  function _updateFsIcon() {
     const icon = document.getElementById('fs-icon');
-    if (icon) icon.innerHTML = document.fullscreenElement ? FS_ICON_CLOSE : FS_ICON_OPEN;
+    if (icon) icon.innerHTML = (document.fullscreenElement || document.webkitFullscreenElement) ? FS_ICON_CLOSE : FS_ICON_OPEN;
     setTimeout(() => map.resize(), 100);
-  });
+  }
+  document.addEventListener('fullscreenchange',       _updateFsIcon);
+  document.addEventListener('webkitfullscreenchange', _updateFsIcon);
 </script>
 </body>
 </html>
