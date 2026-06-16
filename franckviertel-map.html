@@ -73,14 +73,14 @@
 
     #version {
       position: fixed;
-      bottom: 8px; left: 12px;
+      bottom: 10px; left: 14px;
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 11px;
       color: var(--text-dim);
-      opacity: 0.4;
+      opacity: 0.65;
       letter-spacing: 0.08em;
       pointer-events: none;
-      z-index: 10;
+      z-index: 15;
     }
 
     #controls {
@@ -627,7 +627,6 @@
 </head>
 <body>
 
-<div id="version">v2026-06-16</div>
 <div id="status">Lade Kartendaten …</div>
 <div id="map"></div>
 <div id="sheet-overlay"></div>
@@ -679,6 +678,8 @@
   </svg>
   <span id="view-label">3D</span>
 </button>
+
+<div id="version">v2026-06-16</div>
 
 <script>
   const DATA_URL = './franckviertel-full.json';
