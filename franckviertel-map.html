@@ -71,6 +71,18 @@
       letter-spacing: 0.06em;
     }
 
+    #version {
+      position: fixed;
+      bottom: 8px; left: 12px;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-dim);
+      opacity: 0.4;
+      letter-spacing: 0.08em;
+      pointer-events: none;
+      z-index: 10;
+    }
+
     #controls {
       display: flex;
       flex-direction: column;
@@ -615,6 +627,7 @@
 </head>
 <body>
 
+<div id="version">v2026-06-16</div>
 <div id="status">Lade Kartendaten …</div>
 <div id="map"></div>
 <div id="sheet-overlay"></div>
@@ -1452,10 +1465,25 @@
   // Accordion toggle listener removed — media opens in modal
 
   // ── Bottom Sheet ─────────────────────────────────────────────────────
-  // Prevent sheet scroll from propagating to window (would exit iOS fullscreen)
+  // Prevent sheet scroll from triggering iOS fullscreen exit.
+  // At scroll boundaries, preventDefault() blocks the overscroll gesture
+  // that Safari uses to exit fullscreen. Within bounds, only stopPropagation.
   (function() {
     const sheet = document.getElementById('bottom-sheet');
-    if (sheet) sheet.addEventListener('touchmove', e => e.stopPropagation(), { passive: true });
+    if (!sheet) return;
+    let _touchStartY = 0;
+    sheet.addEventListener('touchstart', e => {
+      _touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    sheet.addEventListener('touchmove', e => {
+      e.stopPropagation();
+      const dy      = _touchStartY - e.touches[0].clientY; // >0 = scroll down
+      const atTop   = sheet.scrollTop <= 0;
+      const atBottom = sheet.scrollTop + sheet.clientHeight >= sheet.scrollHeight - 1;
+      if ((atTop && dy < 0) || (atBottom && dy > 0)) {
+        e.preventDefault(); // block overscroll → blocks iOS fullscreen exit
+      }
+    }, { passive: false });
   })();
 
   function openSheet({ imgHtml, gname, cls, title, desc, embedHtml, extUrl, accentColor, youtubeEmbed, pdfEmbed }) {
