@@ -1452,6 +1452,12 @@
   // Accordion toggle listener removed — media opens in modal
 
   // ── Bottom Sheet ─────────────────────────────────────────────────────
+  // Prevent sheet scroll from propagating to window (would exit iOS fullscreen)
+  (function() {
+    const sheet = document.getElementById('bottom-sheet');
+    if (sheet) sheet.addEventListener('touchmove', e => e.stopPropagation(), { passive: true });
+  })();
+
   function openSheet({ imgHtml, gname, cls, title, desc, embedHtml, extUrl, accentColor, youtubeEmbed, pdfEmbed }) {
     const sheet   = document.getElementById('bottom-sheet');
     const overlay = document.getElementById('sheet-overlay');
